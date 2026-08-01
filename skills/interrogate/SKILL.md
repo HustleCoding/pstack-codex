@@ -32,7 +32,7 @@ Write one clear paragraph. Reviewers challenge whether the work achieves the int
 
 ## Step 3, Spawn Reviewers
 
-Launch the configured review-panel count as Codex collaboration agents before waiting. If no config exists, use three when slots allow. Tell each reviewer the task is read-only. When model selection is available, use the configured `interrogate reviewers` entries in order; otherwise omit model and reasoning fields.
+Launch the configured review-panel count as Codex collaboration agents before waiting. If no config exists, use three when slots allow. Tell each reviewer the task is read-only. When model selection is available, use model route `interrogate reviewers` in order; otherwise omit model and reasoning fields.
 
 Read `references/reviewer-prompt.md` and fill in the template with:
 1. The stated intent

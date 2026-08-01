@@ -36,24 +36,34 @@ Use this shape, adjusted to the capabilities you verified:
 ```md
 # pstack configuration for Codex
 
+## Parent task
+
 - runtime: Codex
-- model routing: use the role settings below when the collaboration tool exposes model and reasoning-effort selection; otherwise inherit the session runtime
-- default child: gpt-5.6-terra, reasoning medium
-- routine implementation and exploration: gpt-5.6-terra, reasoning high
-- complex implementation, bug fix, and performance work: gpt-5.6-sol, reasoning high
-- architecture lead: gpt-5.6-sol, reasoning xhigh
-- how explorers and why investigators: gpt-5.6-terra, reasoning medium
-- synthesis: gpt-5.6-sol, reasoning high
-- how critics: gpt-5.6-terra high; gpt-5.6-sol high; gpt-5.6-sol xhigh
-- arena runners: gpt-5.6-terra high; gpt-5.6-sol high; gpt-5.6-sol xhigh
-- architect runners: gpt-5.6-terra high; gpt-5.6-sol high; gpt-5.6-sol xhigh
-- interrogate reviewers: gpt-5.6-terra high; gpt-5.6-sol high; gpt-5.6-sol xhigh
-- cross-judge: gpt-5.6-sol, reasoning xhigh
-- reflect tooling: gpt-5.6-terra, reasoning medium
-- reflect judgment: gpt-5.6-sol, reasoning high
-- reflect divergent: gpt-5.6-terra, reasoning xhigh
-- reflect synthesizer: gpt-5.6-sol, reasoning high
-- swarm workers: gpt-5.6-terra, reasoning medium; raise to gpt-5.6-sol high only for difficult code slices
+- recommendation: gpt-5.6-sol@xhigh for architecture and final synthesis
+- boundary: pstack cannot change the active task model or reasoning effort; select them when starting the task
+
+## Model routes
+
+- default child: gpt-5.6-terra@medium
+- routine work: gpt-5.6-terra@high
+- complex work: gpt-5.6-sol@high
+- how explorers: gpt-5.6-terra@medium
+- why investigators: gpt-5.6-terra@medium
+- why synthesizer: gpt-5.6-sol@high
+- how critics: gpt-5.6-terra@high, gpt-5.6-sol@high, gpt-5.6-sol@xhigh
+- arena runners: gpt-5.6-terra@high, gpt-5.6-sol@high, gpt-5.6-sol@xhigh
+- architect runners: gpt-5.6-terra@high, gpt-5.6-sol@high, gpt-5.6-sol@xhigh
+- interrogate reviewers: gpt-5.6-terra@high, gpt-5.6-sol@high, gpt-5.6-sol@xhigh
+- cross-judge: gpt-5.6-terra@xhigh
+- reflect tooling: gpt-5.6-terra@medium
+- reflect judgment: gpt-5.6-sol@high
+- reflect divergent: gpt-5.6-terra@xhigh
+- reflect synthesizer: gpt-5.6-sol@high
+- swarm workers: gpt-5.6-terra@medium
+
+## Runtime policy
+
+- model routing: pass a route's model and reasoning effort when the collaboration tool supports both; otherwise inherit the session runtime
 - maximum parallel children: 3
 - default arena candidates: 3
 - default review panel: 3
@@ -70,7 +80,7 @@ Use this shape, adjusted to the capabilities you verified:
 
 Keep the file factual. Omit unavailable integrations instead of leaving aspirational settings.
 
-The role-routing labels are instructions for pstack workflow skills. When a panel has three entries, launch one child per entry in that order. When the active collaboration tool cannot select a model or effort, omit both fields and inherit the session runtime.
+The model-route labels are stable identifiers used by pstack workflow skills. Every route entry uses `model@reasoning_effort`; panel entries are comma-separated and launch one child per entry in order. The `Parent task` recommendation is advisory because a child-spawn setting cannot change the active task. When the active collaboration tool cannot select a model or effort, omit both fields and inherit the session runtime.
 
 ## 5. Confirm and offer verification
 

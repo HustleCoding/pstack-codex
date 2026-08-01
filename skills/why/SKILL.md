@@ -113,7 +113,7 @@ Source control is always available through git and `gh`. For the other six, clas
 
 Aim for a complete **coverage map**, not a minimal one. A null result from an issue tracker is evidence the decision was not ticketed, a useful fact in itself. Document the null, don't skip the search.
 
-Launch matching investigators concurrently up to the configured child limit, then run another wave if more categories remain. One investigator per category lets each specialize in one tool's query vocabulary and result shape. Keep source-control work in the parent when that leaves scarce child slots for connector-backed evidence. Investigators are read-only by instruction and must not modify external systems. When model selection is available, use the configured `why investigators` route.
+Launch matching investigators concurrently up to the configured child limit, then run another wave if more categories remain. One investigator per category lets each specialize in one tool's query vocabulary and result shape. Keep source-control work in the parent when that leaves scarce child slots for connector-backed evidence. Investigators are read-only by instruction and must not modify external systems. When model selection is available, use model route `why investigators`.
 
 Each investigator gets:
 1. The base prompt from `references/investigator-prompt.md`
@@ -155,7 +155,7 @@ If your scope assessment suggests a single-commit trivial target where the PR de
 
 ## Step 4. Synthesize
 
-After every investigator finishes, spawn one fresh synthesizer agent when a collaboration slot is available. It may use available tools to spot-check citations but must not write to external systems. When model selection is available, use the configured `synthesis` route. If collaboration is unavailable, synthesize in the parent and perform the same citation checks.
+After every investigator finishes, spawn one fresh synthesizer agent when a collaboration slot is available. It may use available tools to spot-check citations but must not write to external systems. When model selection is available, use model route `why synthesizer`. If collaboration is unavailable, synthesize in the parent and perform the same citation checks.
 
 The synthesizer gets:
 1. The investigator findings, including any null results and any categories skipped with justification

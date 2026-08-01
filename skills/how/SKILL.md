@@ -42,7 +42,7 @@ Decompose the question into 2-4 parallel exploration angles, each a distinct sli
 
 The right decomposition depends on the question. Use your judgment. Narrow questions: 2 explorers is fine. Broad subsystems: up to 4.
 
-Spawn the explorers as independent Codex collaboration agents before waiting. Tell them the task is read-only. Bound the count by the available collaboration slots and `~/.codex/pstack/config.md`. When model selection is available, use the configured `how explorers` route.
+Spawn the explorers as independent Codex collaboration agents before waiting. Tell them the task is read-only. Bound the count by the available collaboration slots and `~/.codex/pstack/config.md`. When model selection is available, use model route `how explorers`.
 
 Each explorer gets the same base prompt from `references/explorer-prompt.md` plus a specific exploration angle naming its slice. Each explorer should:
 - Start broad: Glob for relevant directories, Grep for key types/interfaces/class names
@@ -93,7 +93,7 @@ Run the full explain flow above (Steps 1-4). You must understand the architectur
 
 ### Step 2. Spawn Critics
 
-After the explanation is complete, spawn the configured number of architectural critics concurrently. If no config exists, use three when slots allow. Give every critic the same evidence and rubric, and tell each that the task is read-only. When model selection is available, use the configured `how critics` entries in order; otherwise independence comes from separate context and separate review passes.
+After the explanation is complete, spawn the configured number of architectural critics concurrently. If no config exists, use three when slots allow. Give every critic the same evidence and rubric, and tell each that the task is read-only. When model selection is available, use model route `how critics` in order; otherwise independence comes from separate context and separate review passes.
 
 Read `references/critic-prompt.md` for the prompt template. Each critic gets:
 1. The explanation from Step 1 (so they don't re-explore)

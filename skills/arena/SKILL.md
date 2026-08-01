@@ -24,7 +24,7 @@ The N candidates will receive the same prompt, so the prompt is the contract. Ge
 
 1. State the artifact each candidate is producing.
 2. Derive the rubric. State what success looks like for *this* task, then turn it into 3-6 concrete gradeable criteria. Concrete: `Adds a --dry-run flag that skips writes`. Vague: `code is correct`. The rubric is the picker's tool in Phase D; candidates only see the task.
-3. Pick the runners. Default to the candidate count in `~/.codex/pstack/config.md`, bounded by the available collaboration slots. If no config exists, use three. Give each runner a distinct design direction when judgment matters. For generation-bound work, use the same prompt and independent output paths. When model selection is available, use the configured `arena runners` entries in order; architect uses `architect runners` instead.
+3. Pick the runners. Default to the candidate count in `~/.codex/pstack/config.md`, bounded by the available collaboration slots. If no config exists, use three. Give each runner a distinct design direction when judgment matters. For generation-bound work, use the same prompt and independent output paths. When model selection is available, use model route `arena runners` in order; architect uses model route `architect runners` instead.
 4. Assign output paths. Each candidate writes to its own location (a git worktree where possible, otherwise `/tmp/arena-<slug>/candidate-<n>/`). N candidates writing to the same path is shared mutable state and fails the the **separate-before-serializing-shared-state** principle skill test.
 
 ## Phase B: Fan out
@@ -37,7 +37,7 @@ If a candidate fails to produce output, proceed with N-1 and note the dropout in
 
 ## Phase C: Cross-judge
 
-After all Phase B candidates complete, spawn one fresh judge agent. It sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. When model selection is available, use the configured `cross-judge` route. It runs while the parent reads the candidates in Phase D, not while candidates are still writing. Otherwise the judge can see partial output and report false dropouts.
+After all Phase B candidates complete, spawn one fresh judge agent. It sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. When model selection is available, use model route `cross-judge`. It runs while the parent reads the candidates in Phase D, not while candidates are still writing. Otherwise the judge can see partial output and report false dropouts.
 
 ## Phase D: Pick a base
 
