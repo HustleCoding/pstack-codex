@@ -10,7 +10,7 @@ The engineering principles and playbooks remain pstack's. The runtime integratio
 - Codex browser, computer-use, GitHub, and automation tools
 - `.codex/skills` for global and project-local skills
 
-The port currently contains 40 skills, including `poteto-mode`, its playbooks, the workflow skills, and 21 engineering principles.
+The port currently contains 41 skills, including `poteto-mode`, its playbooks, `swarm`, the workflow skills, and 21 engineering principles.
 
 ## Install
 
@@ -42,7 +42,7 @@ Start rigorous work with:
 Use poteto-mode. Diagnose this bug, prove the root cause, fix it, and verify on the real surface.
 ```
 
-You can also invoke focused skills such as `how`, `why`, `architect`, `arena`, `interrogate`, `blast-radius`, `tdd`, and `teach`.
+You can also invoke focused skills such as `how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `blast-radius`, `tdd`, and `teach`.
 
 ## Check upstream
 
@@ -61,4 +61,3 @@ After porting an upstream update, replace `UPSTREAM_COMMIT` with the reviewed up
 ## Attribution
 
 pstack was created by [Lauren Tan](https://github.com/poteto) and is published in the [Cursor plugins repository](https://github.com/cursor/plugins/tree/main/pstack) under the MIT License. This repository is an independent Codex port and is not affiliated with Cursor or OpenAI.
-

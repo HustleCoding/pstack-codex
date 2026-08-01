@@ -33,6 +33,7 @@ recall
 reflect
 setup-pstack
 show-me-your-work
+swarm
 tdd
 teach
 typescript-best-practices

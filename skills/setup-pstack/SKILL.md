@@ -43,6 +43,7 @@ Use this shape, adjusted to the capabilities you verified:
 - default review panel: 3
 - simple investigations: main agent
 - complex investigations: parallel explorers, then parent synthesis
+- swarm: use bounded parallel workers for coverage, races, and exploration; use arena for design bakeoffs
 - subagent isolation: separate output paths or worktrees for writers
 - memory source: Codex memory first, scoped task history second
 - verification: real artifact plus focused automated checks

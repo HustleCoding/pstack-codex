@@ -15,6 +15,7 @@ Remaining triggers:
 - About to ask the user about a "which approach", "how should I", or "what should this do" fork → classify it before you ask. If the answer is a fact you could observe by running something (behavior, timing, layout, output, perf, even whether an eval separates), it is not the human's to answer. Sketch it via the Prototype playbook (`playbooks/prototype.md`) and let the result decide. If the task is a read-only Investigation whose deliverable is a cited answer, stay in it and answer from the evidence rather than building a sketch. Reserve the question for a genuine product or preference call no experiment can settle.
 - Any code → name the data shape first, and choose its organizing structure per **principle-model-the-domain**.
 - Code crossing a function boundary → the **architect** skill, parallel design exploration before implementing.
+- Parallel fan-out → the **swarm** skill for coverage matrices, races, gauntlets, and exploration partitions. Use **arena** for design or code bakeoffs with base selection and grafting.
 - Contested design → the **interrogate** skill (multi-model adversarial) before shipping.
 - Nontrivial multi-step → write the throughput checkpoint (Feature step 3).
 - Any prose surface → the **unslop** skill. Your reply is a prose surface; write it per **Writing the reply**. Agent-facing prose also follows the **skill-creator** skill.
@@ -79,7 +80,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 Read `~/.codex/pstack/config.md` when it exists. Its concurrency and fan-out values override the defaults below.
 
-Use Codex collaboration agents for bounded work that can run independently. The pstack playbook is the explicit delegation instruction. Spawn a normal agent and tell it to read `poteto-mode` before working when it is writing code or making a pstack-shaped judgment. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`) provide their own prompts.
+Use Codex collaboration agents for bounded work that can run independently. The pstack playbook is the explicit delegation instruction. Spawn a normal agent and tell it to read `poteto-mode` before working when it is writing code or making a pstack-shaped judgment. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) provide their own prompts.
 
 Codex collaboration agents inherit the session runtime unless the active tool schema exposes model selection. Never invent or pass Cursor model slugs. Run independent agents concurrently up to the configured limit. Give each writer a separate worktree or output path. Keep the parent working while children run, then review every result and write the final synthesis yourself.
 

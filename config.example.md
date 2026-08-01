@@ -7,6 +7,7 @@
 - default review panel: 3
 - simple investigations: main agent
 - complex investigations: up to 3 parallel explorers, then parent synthesis
+- swarm: use bounded parallel workers for coverage, races, and exploration; use arena for design bakeoffs
 - subagent isolation: separate output paths or worktrees for writers
 - memory source: Codex memory index first, scoped task history second
 - verification: real artifact plus focused automated checks
@@ -15,4 +16,3 @@
 - pull request follow-through: inspect checks and review feedback until the requested terminal state
 - external writes: stay inside the user's request and existing authority
 - prose: unslop
-
