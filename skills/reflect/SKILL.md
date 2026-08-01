@@ -25,7 +25,7 @@ Use the current Codex conversation and task context. Collaboration agents spawne
 
 ### 2. Spawn three reviewers in parallel
 
-Spawn three Codex collaboration agents before waiting. Give them the active conversation context and forbid file or external-system writes. They may use read-only tools to verify citations. Codex agents inherit the session runtime.
+Spawn three Codex collaboration agents before waiting. Give them the active conversation context and forbid file or external-system writes. They may use read-only tools to verify citations. When model selection is available, use `reflect judgment`, `reflect tooling`, and `reflect divergent` routes respectively; otherwise inherit the session runtime.
 
 | Lens | Prompt template |
 |---|---|
@@ -37,7 +37,7 @@ Pass each template verbatim, substituting the active context or digest where mar
 
 ### 3. Synthesize
 
-Spawn one fresh synthesizer agent after the reviewers finish, or synthesize in the parent if no slot is available. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list and spot-verifies citations with read-only tools.
+Spawn one fresh synthesizer agent after the reviewers finish, or synthesize in the parent if no slot is available. When model selection is available, use the configured `reflect synthesizer` route. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list and spot-verifies citations with read-only tools.
 
 ### 4. Structural enforcement check
 

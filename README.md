@@ -5,7 +5,7 @@ This repository ports [pstack](https://github.com/cursor/plugins/tree/main/pstac
 The engineering principles and playbooks remain pstack's. The runtime integration is native Codex:
 
 - Codex collaboration agents instead of Cursor `Task` and `poteto-agent`
-- inherited session runtime instead of hard-coded model slugs
+- verified Codex model and reasoning routes when the collaboration tool exposes them, with session-runtime inheritance as the fallback
 - Codex memory and task history instead of Cursor transcript paths
 - Codex browser, computer-use, GitHub, and automation tools
 - `.codex/skills` for global and project-local skills
@@ -32,7 +32,7 @@ Ask Codex:
 Use setup-pstack and configure pstack with your recommended Codex settings.
 ```
 
-The setup skill writes `~/.codex/pstack/config.md`. Codex collaboration agents currently inherit the session runtime, so the setup controls fan-out, isolation, memory, verification, and publication policy rather than assigning model slugs.
+The setup skill writes `~/.codex/pstack/config.md`. When the active collaboration tool exposes model and reasoning-effort selection, the configuration routes verified Codex models by role; otherwise agents inherit the session runtime. It also controls fan-out, isolation, memory, verification, and publication policy.
 
 ## Use
 

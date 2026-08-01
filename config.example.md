@@ -1,7 +1,23 @@
 # pstack configuration for Codex
 
 - runtime: Codex
-- subagent model: inherit session runtime
+- model routing: use the role settings below when the collaboration tool exposes model and reasoning-effort selection; otherwise inherit the session runtime
+- default child: gpt-5.6-terra, reasoning medium
+- routine implementation and exploration: gpt-5.6-terra, reasoning high
+- complex implementation, bug fix, and performance work: gpt-5.6-sol, reasoning high
+- architecture lead: gpt-5.6-sol, reasoning xhigh
+- how explorers and why investigators: gpt-5.6-terra, reasoning medium
+- synthesis: gpt-5.6-sol, reasoning high
+- how critics: gpt-5.6-terra high; gpt-5.6-sol high; gpt-5.6-sol xhigh
+- arena runners: gpt-5.6-terra high; gpt-5.6-sol high; gpt-5.6-sol xhigh
+- architect runners: gpt-5.6-terra high; gpt-5.6-sol high; gpt-5.6-sol xhigh
+- interrogate reviewers: gpt-5.6-terra high; gpt-5.6-sol high; gpt-5.6-sol xhigh
+- cross-judge: gpt-5.6-sol, reasoning xhigh
+- reflect tooling: gpt-5.6-terra, reasoning medium
+- reflect judgment: gpt-5.6-sol, reasoning high
+- reflect divergent: gpt-5.6-terra, reasoning xhigh
+- reflect synthesizer: gpt-5.6-sol, reasoning high
+- swarm workers: gpt-5.6-terra, reasoning medium; raise to gpt-5.6-sol high only for difficult code slices
 - maximum parallel children: 3
 - default arena candidates: 3
 - default review panel: 3

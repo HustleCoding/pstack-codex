@@ -21,7 +21,7 @@ Create a task plan with one entry per phase before launching anything.
 1. State the done predicate and the artifact or report the swarm must return.
 2. Choose the shape: partition into slices, race workers on identical briefs, or mix both. For a race or mixed shape, declare `first pass`, `rank all`, or `best-of` before spawning.
 3. Set the worker count from the user's request or derive it from the shape. The configured `maximum parallel children` in `~/.codex/pstack/config.md` and the live collaboration-slot limit cap simultaneous workers. Keep the fan-out no larger than the work warrants.
-4. Use the session runtime unless the collaboration tool explicitly supports a verified model choice. Never invent a model slug.
+4. When the collaboration tool exposes model and reasoning-effort selection, use the configured `swarm workers` route. For a difficult code slice, raise that worker to the configured complex-work route. Otherwise inherit the session runtime. Never invent a model slug or reasoning value.
 5. Give each worker its own writable output when it writes: a worktree when possible, otherwise a separate output directory.
 
 ## Phase B: Fan out
