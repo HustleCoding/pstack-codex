@@ -1,0 +1,11 @@
+ts	phase	decision	why	evidence	result
+2026-08-03T06:30:00Z	frame	port upstream 0.13 and 0.14 as one Codex-native update	the upstream commits form one connected routing and runtime change	https://github.com/cursor/plugins/compare/14d9dfa06283faa94bf9931d3e98c189bc375680...424829e3e0f7e5a8b9181412ca04e84e026a0c02	open
+2026-08-03T06:31:00Z	baseline	confirmed the existing 41-skill port passes its audit	capture a clean baseline before changing globally installed instructions	scripts/audit.py	41 skills passed
+2026-08-03T06:32:00Z	design	keep reusable workflow logic and replace Cursor runtime assumptions with Codex collaboration and task controls	the port must behave like a native Codex skill set rather than expose dead Cursor commands	AGENTS.md	chosen
+2026-08-03T06:42:00Z	runtime	kept watch-pr and removed the Graphite-only orch runtime	watch-pr passed locally while orch frontier required unavailable gt	skills/poteto-mode/scripts/package.json	38 tests passed
+2026-08-03T06:45:00Z	playbooks	rewrote six workflow playbooks around Codex collaboration and explicit write authority	verbatim Cursor cloud and Graphite instructions would fail in this setup	skills/poteto-mode/playbooks	44-skill audit passed
+2026-08-03T06:48:00Z	verification	verified watch-pr from a clean copied skill directory	proves first-use dependency bootstrap rather than relying on the development node_modules	skills/poteto-mode/scripts/watch-pr/watch-pr	bootstrap passed
+2026-08-03T06:49:00Z	cleanup	ignored and trashed generated node_modules	dependencies must install at runtime and never enter the repository	.gitignore	generated files removed
+2026-08-03T06:51:00Z	review	made worktree audit detect the default branch and fail closed on GitHub errors	independent review found origin/main and empty-PR fallbacks could understate risk	skills/poteto-mode/scripts/worktree-audit.sh	fail-closed test passed
+2026-08-03T06:52:00Z	install	installed all 44 skills into the local Codex setup with a timestamped backup	the user requested the repository update followed by the local setup	/Users/florindobinciuc/.codex/backups/pstack-codex-20260803T065246Z	installed
+2026-08-03T06:55:00Z	review	made no-comments report-only unless the caller authorized edits	independent review found review-only requests could otherwise cause local changes	skills/no-comments/SKILL.md	fixed

@@ -40,5 +40,7 @@
 - browser verification: installed browser, computer-use, or project verification skill
 - pull request creation: only when the user or active workflow authorizes publication
 - pull request follow-through: inspect checks and review feedback until the requested terminal state
+- PR monitoring: bundled watch-pr with Bun and authenticated gh
+- merge authority: require an explicit request to merge, land, ship, or enable merge when ready
 - external writes: stay inside the user's request and existing authority
 - prose: unslop

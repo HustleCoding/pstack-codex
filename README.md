@@ -10,7 +10,7 @@ The engineering principles and playbooks remain pstack's. The runtime integratio
 - Codex browser, computer-use, GitHub, and automation tools
 - `.codex/skills` for global and project-local skills
 
-The port currently contains 41 skills, including `poteto-mode`, its playbooks, `swarm`, the workflow skills, and 21 engineering principles.
+The port currently contains 44 skills, including `poteto-mode`, its playbooks, `swarm`, the workflow skills, and 21 engineering principles. The 0.14 port adds `bro`, `no-comments`, `technical-writing`, Babysit, Shipping, Autopilot-full, Autopilot-stack, Orchestrate, and safe worktree cleanup.
 
 ## Install
 
@@ -43,6 +43,15 @@ Use poteto-mode. Diagnose this bug, prove the root cause, fix it, and verify on 
 ```
 
 You can also invoke focused skills such as `how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `blast-radius`, `tdd`, and `teach`.
+
+PR monitoring uses the bundled `poteto-mode` watcher. It requires Bun and an authenticated GitHub CLI:
+
+```bash
+bun --version
+gh auth status
+```
+
+The watcher installs its pinned dependencies on first use and reads GitHub state without granting merge authority. Babysit stops at merge-ready. Shipping requires an explicit request to merge, land, or enable merge when ready.
 
 ## Check upstream
 

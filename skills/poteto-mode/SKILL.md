@@ -18,8 +18,8 @@ Remaining triggers:
 - Parallel fan-out → the **swarm** skill for coverage matrices, races, gauntlets, and exploration partitions. Use **arena** for design or code bakeoffs with base selection and grafting.
 - Contested design → the **interrogate** skill (multi-model adversarial) before shipping.
 - Nontrivial multi-step → write the throughput checkpoint (Feature step 3).
-- Any prose surface → the **unslop** skill. Your reply is a prose surface; write it per **Writing the reply**. Agent-facing prose also follows the **skill-creator** skill.
-- Before commit → inspect the diff for generated clutter, dead code, and unrelated edits. Use a cleanup or review skill when one is installed.
+- Any prose surface → the **unslop** skill. For docs, RFCs, READMEs, PR descriptions, or commit messages, also use the **technical-writing** skill. Your reply is a prose surface; write it per **Writing the reply**. Agent-facing prose also follows the **skill-creator** skill.
+- Before review → run the **no-comments** skill, then inspect the diff for generated clutter, dead code, and unrelated edits.
 - Shipping UI / IDE / CLI → use an installed browser, computer-use, or verification skill on the real surface. For bug fixes, reproduce first on that same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
 - After opening a PR → monitor checks and review feedback until the requested terminal state. Use the GitHub skills or `gh` when available.
 - Automated review commented → skeptical posture. Assess each finding on its merits and dismiss noise with a concrete reason instead of churning code.
@@ -122,6 +122,12 @@ A large or cross-cutting effort (a migration across many call sites, an ambitiou
 - **Authoring or modifying a skill.** Writing or editing a SKILL.md. `playbooks/authoring-a-skill.md`.
 - **Eval.** Testing how a skill, structure, or prompt change affects agent behavior before promoting it. `playbooks/eval.md`.
 - **Autonomous run.** A long task to drive to completion without stopping ("run until done", "keep checking until X"). `playbooks/autonomous-run.md`.
+- **Babysit.** Drive one PR frontier to merge-ready without inferring merge authority. `playbooks/babysit.md`.
+- **Shipping.** Independently verify and land a contiguous PR run after explicit merge authorization. `playbooks/shipping.md`.
+- **Autopilot-full.** Drive independent PRs through verified merge when the user granted landing authority. `playbooks/autopilot-full.md`.
+- **Autopilot-stack.** Build and verify one linear PR chain for the user to review and land. `playbooks/autopilot-stack.md`.
+- **Orchestrate.** Coordinate a multi-day program through durable state and bounded collaboration agents. `playbooks/orchestrate.md`.
+- **Worktree cleanup.** Audit and safely reclaim worktrees, simulators, and caches. `playbooks/worktree-cleanup.md`.
 - **Session pickup.** Resuming or taking over a prior agent's in-flight work from Codex task history, a branch, or a decision trail. `playbooks/session-pickup.md`.
 - **Pause safely.** Suspending in-flight work cleanly so it can be resumed, on an explicit pause, going offline, a Codex restart, or imminent context compaction. The complement to Session pickup. Full steps: `playbooks/pause-safely.md`.
 - **Multi-phase or multi-PR plan.** Work that spans phases or stacked PRs. `playbooks/multi-phase-plan.md`.

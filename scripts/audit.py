@@ -14,7 +14,13 @@ FORBIDDEN = {
     "run_in_background": "Cursor Task option",
     "agent-transcripts": "Cursor transcript layout",
     "Cursor's `/loop`": "Cursor loop command",
+    '@cursor-skill/': "Cursor package namespace",
+    'environment: "cloud"': "Cursor cloud environment",
+    "cursor-team-kit": "Cursor-only plugin dependency",
+    "Task schema": "Cursor Task schema",
+    "Cursor dashboard": "Cursor dashboard runtime",
 }
+AUDITED_SUFFIXES = {".md", ".ts", ".js", ".json", ".sh"}
 DEFAULT_MODEL_SLUGS = {"gpt-5.6-sol", "gpt-5.6-terra"}
 REASONING_EFFORTS = {"low", "medium", "high", "xhigh", "max", "ultra"}
 MODEL_ROUTE_REFERENCE = re.compile(r"model route `([^`]+)`")
@@ -142,7 +148,9 @@ def main() -> int:
         if not fields.get("description"):
             errors.append(f"{name}: empty description")
 
-        for path in folder.rglob("*.md"):
+        for path in folder.rglob("*"):
+            if not path.is_file() or path.suffix not in AUDITED_SUFFIXES:
+                continue
             contents = path.read_text()
             route_references.update(MODEL_ROUTE_REFERENCE.findall(contents))
             for token, reason in FORBIDDEN.items():

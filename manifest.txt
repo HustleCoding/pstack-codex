@@ -2,11 +2,13 @@ architect
 arena
 automate-me
 blast-radius
+bro
 create-verification-skill
 figure-it-out
 how
 interrogate
 maintain-verification-skill
+no-comments
 poteto-mode
 principle-boundary-discipline
 principle-build-the-lever
@@ -36,6 +38,7 @@ show-me-your-work
 swarm
 tdd
 teach
+technical-writing
 typescript-best-practices
 unslop
 why

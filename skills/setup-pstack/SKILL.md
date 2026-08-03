@@ -15,6 +15,7 @@ Check the capabilities available in the current Codex session:
 - thread and memory lookup tools
 - browser or computer-use tools
 - GitHub or `gh` access
+- Bun when the user wants bundled PR monitoring
 - the `skill-creator` and verification skills
 
 Do not invent capabilities. In particular, Codex collaboration agents inherit the session runtime unless the active tool schema exposes model selection. When it does expose model and reasoning-effort selection, write only verified model slugs and supported effort values. Never invent either.
@@ -75,6 +76,8 @@ Use this shape, adjusted to the capabilities you verified:
 - verification: real artifact plus focused automated checks
 - browser verification: use an installed browser or computer-use skill
 - pull request follow-through: inspect checks and review feedback until terminal state
+- PR monitoring: use the bundled watcher only when Bun and authenticated gh are available
+- merge authority: require an explicit request to merge, land, ship, or enable merge when ready
 - prose: unslop
 ```
 

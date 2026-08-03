@@ -13,7 +13,7 @@ This skill orchestrates three others: the **recall** skill for scoped history, C
 
 ### 0. Check for an existing skill
 
-Look for `*-mode/SKILL.md` matching the user's handle under the project's `.codex/skills/` or the user's `~/.codex/skills/`. If one exists and the user did not already say "update my skill" or similar, ask whether to update it or start fresh. Default to updating.
+Look recursively for `*-mode/SKILL.md` matching the user's handle under the project's `.codex/skills/` and the user's `~/.codex/skills/`. A mode may live inside a personal category directory. If one exists and the user did not already say "update my skill" or similar, ask whether to update it or start fresh. Default to updating.
 
 - Update the existing skill (default for repeat runs)
 - Start fresh (rare; ask why before doing it)
@@ -63,7 +63,7 @@ The **poteto-mode** skill shows the shape. Read it for granularity. Don't copy i
 
 Use Codex's `skill-creator` skill to author the skill. Placement:
 
-- Path: `.codex/skills/<handle>-mode/SKILL.md` in the project, or `~/.codex/skills/<handle>-mode/` for a personal skill.
+- Path: preserve an existing mode skill's category. For a new mode, use `.codex/skills/<handle>/<handle>-mode/SKILL.md` when the repository already has a category for that handle. Otherwise use `.codex/skills/<handle>-mode/SKILL.md` in the project, or `~/.codex/skills/<handle>-mode/` for a personal skill.
 - Handle: the user's first name or chosen identifier.
 - Frontmatter `description`: trigger on their name + `/<handle>-mode` + "work in their style", not on generic keywords like "write code" or "review PR".
 - Frontmatter formatting: follow `skill-creator`'s YAML rules. Keep `description` as one YAML scalar; quote it or use `description: >-` with indented continuation lines when punctuation or wrapping requires it.
