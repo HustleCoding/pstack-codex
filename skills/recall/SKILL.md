@@ -5,7 +5,7 @@ description: "Reconstruct your recent working context from your own chat history
 
 # Recall
 
-**Before you start or resume work, you rebuild the user's recent working context and hand back a tight capsule of where things stand now and what to do next.** Use for "recall my work on X", "catch me up", "what have I been working on", or "where did I leave off".
+**Before you start or resume work, you rebuild the user's recent working context and hand back a tight capsule of where things stand now and what to do next.**
 
 Keep it tight and on-topic. Read only what the in-scope tasks need, then stop. Heavy reading may fan out to collaboration agents. The main task keeps only their findings and the final brief.
 

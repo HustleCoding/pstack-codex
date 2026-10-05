@@ -3,31 +3,41 @@
 ## Parent task
 
 - runtime: Codex
-- recommendation: gpt-5.6-sol@xhigh for architecture and final synthesis
+- recommendation: gpt-6.1-sol@high for daily coding and final synthesis
 - boundary: pstack cannot change the active task model or reasoning effort; select them when starting the task
+
+## Budget
+
+- profile: balanced
+- policy: preserve the per-role efforts below; a requested large, medium, or small budget maps routes to xhigh, high, or medium only when that model supports it
+- verified: 2026-10-05 from the active Codex collaboration schema
 
 ## Model routes
 
-- default child: gpt-5.6-terra@medium
-- routine work: gpt-5.6-terra@high
-- complex work: gpt-5.6-sol@high
-- how explorers: gpt-5.6-terra@medium
-- why investigators: gpt-5.6-terra@medium
-- why synthesizer: gpt-5.6-sol@high
-- how critics: gpt-5.6-terra@high, gpt-5.6-sol@high, gpt-5.6-sol@xhigh
-- arena runners: gpt-5.6-terra@high, gpt-5.6-sol@high, gpt-5.6-sol@xhigh
-- architect runners: gpt-5.6-terra@high, gpt-5.6-sol@high, gpt-5.6-sol@xhigh
-- interrogate reviewers: gpt-5.6-terra@high, gpt-5.6-sol@high, gpt-5.6-sol@xhigh
-- cross-judge: gpt-5.6-terra@xhigh
-- reflect tooling: gpt-5.6-terra@medium
-- reflect judgment: gpt-5.6-sol@high
-- reflect divergent: gpt-5.6-terra@xhigh
-- reflect synthesizer: gpt-5.6-sol@high
-- swarm workers: gpt-5.6-terra@medium
+- default child: gpt-6-luna@medium
+- routine work: gpt-6.1-sol@medium
+- complex work: gpt-6.1-sol@high
+- bug-fix: gpt-6.1-sol@high
+- perf-issue: gpt-6.1-sol@high
+- hillclimb: gpt-6.1-sol@high
+- hardest tasks: gpt-6-astra@high
+- how explorers: gpt-6-luna@high
+- how explainer: gpt-6.1-sol@high
+- why investigators: gpt-6-luna@high
+- why synthesizer: gpt-6.1-sol@high
+- arena runners: gpt-6-luna@high, gpt-6.1-sol@high, gpt-6-astra@high
+- architect runners: gpt-6-luna@high, gpt-6.1-sol@high, gpt-6-astra@high
+- interrogate reviewers: gpt-6-luna@high, gpt-6.1-sol@high, gpt-6-astra@high
+- arena cross-judge pool: gpt-6-astra@high, gpt-6.1-sol@high, gpt-6-luna@high
+- reflect tooling: gpt-6-luna@medium
+- reflect judgment: gpt-6.1-sol@high
+- reflect divergent: gpt-6-astra@high
+- reflect synthesizer: gpt-6.1-sol@high
+- swarm workers: gpt-6-luna@high
 
 ## Runtime policy
 
-- model routing: pass a route's model and reasoning effort when the collaboration tool supports both; otherwise inherit the session runtime
+- model routing: pass a route's model and reasoning effort when the collaboration tool supports both; otherwise inherit the session runtime; use minimal task-local context for a model override
 - maximum parallel children: 3
 - default arena candidates: 3
 - default review panel: 3

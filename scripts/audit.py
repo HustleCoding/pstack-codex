@@ -10,6 +10,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 FORBIDDEN = {
     ".cursor/": "Cursor filesystem path",
     "Task tool": "Cursor Task tool",
+    "`Task`": "Cursor Task call",
+    "pstack-models.mdc": "Cursor model rule",
+    "`/loop": "Cursor loop command",
+    "/deslop": "Cursor-only cleanup skill",
+    "cursor.com/docs": "Cursor runtime documentation",
     "subagent_type": "Cursor subagent type",
     "run_in_background": "Cursor Task option",
     "agent-transcripts": "Cursor transcript layout",
@@ -20,13 +25,22 @@ FORBIDDEN = {
     "Task schema": "Cursor Task schema",
     "Cursor dashboard": "Cursor dashboard runtime",
 }
-AUDITED_SUFFIXES = {".md", ".ts", ".js", ".json", ".sh"}
-DEFAULT_MODEL_SLUGS = {"gpt-5.6-sol", "gpt-5.6-terra"}
-REASONING_EFFORTS = {"low", "medium", "high", "xhigh", "max", "ultra"}
+AUDITED_SUFFIXES = {".md", ".ts", ".js", ".mjs", ".json", ".sh"}
+MODEL_EFFORTS = {
+    "gpt-6.1-sol": {"low", "medium", "high", "xhigh", "max", "ultra"},
+    "gpt-6-astra": {"low", "medium", "high", "xhigh", "max", "ultra"},
+    "gpt-6-sol": {"low", "medium", "high", "xhigh", "max", "ultra"},
+    "gpt-6-luna": {"low", "medium", "high", "xhigh", "max"},
+    "gpt-5.6-sol": {"low", "medium", "high", "xhigh", "max", "ultra"},
+    "gpt-5.6-luna": {"low", "medium", "high", "xhigh", "max"},
+    "gpt-5.5": {"low", "medium", "high", "xhigh"},
+}
+DEFAULT_MODEL_SLUGS = {"gpt-6.1-sol", "gpt-6-astra", "gpt-6-luna"}
+INHERITED_ROUTES = {"inherit-parent", "auto"}
+FOREIGN_MODELS = re.compile(r"\b(?:claude-[a-z0-9.-]+|grok-[a-z0-9.-]+|fable-[a-z0-9.-]+)\b", re.I)
 MODEL_ROUTE_REFERENCE = re.compile(r"model route `([^`]+)`")
 MODEL_ROUTE_VALUE = re.compile(r"([a-z0-9][a-z0-9.-]*)@(low|medium|high|xhigh|max|ultra)")
 PANEL_ROUTE_COUNT_SETTINGS = {
-    "how critics": "default review panel",
     "arena runners": "default arena candidates",
     "architect runners": "default arena candidates",
     "interrogate reviewers": "default review panel",
@@ -52,6 +66,8 @@ def frontmatter(text: str) -> tuple[dict[str, str], str]:
         if ":" not in line:
             raise ValueError(f"invalid frontmatter line: {line}")
         key, value = line.split(":", 1)
+        if key.strip() in fields:
+            raise ValueError(f"duplicate frontmatter field: {key.strip()}")
         fields[key.strip()] = value.strip()
     return fields, text[end + 5 :]
 
@@ -69,10 +85,14 @@ def model_routes(config_path: Path, allowed_models: set[str]) -> tuple[dict[str,
     else:
         recommendation = recommendation_match.group(1)
         value_match = MODEL_ROUTE_VALUE.fullmatch(recommendation)
-        if not value_match:
+        if recommendation in INHERITED_ROUTES:
+            pass
+        elif not value_match:
             errors.append(f"{config_path}: invalid parent-task recommendation: {recommendation}")
         elif value_match.group(1) not in allowed_models:
             errors.append(f"{config_path}: unavailable parent-task model: {value_match.group(1)}")
+        elif value_match.group(2) not in MODEL_EFFORTS.get(value_match.group(1), set()):
+            errors.append(f"{config_path}: unsupported parent-task effort: {recommendation}")
 
     marker = "## Model routes\n"
     start = text.find(marker)
@@ -96,6 +116,9 @@ def model_routes(config_path: Path, allowed_models: set[str]) -> tuple[dict[str,
 
         parsed_values: list[tuple[str, str]] = []
         for raw_value in raw_values.split(", "):
+            if raw_value in INHERITED_ROUTES:
+                parsed_values.append((raw_value, ""))
+                continue
             value_match = MODEL_ROUTE_VALUE.fullmatch(raw_value)
             if not value_match:
                 errors.append(f"{config_path}: invalid route value for {role}: {raw_value}")
@@ -103,7 +126,7 @@ def model_routes(config_path: Path, allowed_models: set[str]) -> tuple[dict[str,
             model, effort = value_match.groups()
             if model not in allowed_models:
                 errors.append(f"{config_path}: unavailable model for {role}: {model}")
-            if effort not in REASONING_EFFORTS:
+            if effort not in MODEL_EFFORTS.get(model, set()):
                 errors.append(f"{config_path}: unsupported reasoning effort for {role}: {effort}")
             parsed_values.append((model, effort))
         routes[role] = parsed_values
@@ -118,6 +141,14 @@ def model_routes(config_path: Path, allowed_models: set[str]) -> tuple[dict[str,
         if actual_count != expected_count:
             errors.append(f"{config_path}: {role} needs {expected_count} entries, found {actual_count}")
 
+    for role, values in routes.items():
+        if role not in PANEL_ROUTE_COUNT_SETTINGS and role != "arena cross-judge pool" and len(values) != 1:
+            errors.append(f"{config_path}: {role} needs exactly one route entry")
+    if not routes.get("arena cross-judge pool"):
+        errors.append(f"{config_path}: empty arena cross-judge pool")
+    limit_match = re.search(r"(?m)^- maximum parallel children: ([0-9]+)$", text)
+    if not limit_match or int(limit_match.group(1)) < 1:
+        errors.append(f"{config_path}: maximum parallel children must be positive")
     return routes, errors
 
 
@@ -126,6 +157,13 @@ def main() -> int:
     errors: list[str] = []
     route_references: set[str] = set()
     names = [line.strip() for line in (REPO_ROOT / "manifest.txt").read_text().splitlines() if line.strip()]
+
+    if len(names) != len(set(names)):
+        errors.append("manifest.txt: duplicate skill names")
+    actual_names = {p.name for p in args.skills_root.iterdir() if (p / "SKILL.md").is_file()}
+    if args.skills_root.resolve() == (REPO_ROOT / "skills").resolve():
+        for name in sorted(actual_names - set(names)):
+            errors.append(f"manifest.txt: unlisted skill: {name}")
 
     for name in names:
         folder = args.skills_root / name
@@ -149,6 +187,8 @@ def main() -> int:
             errors.append(f"{name}: empty description")
 
         for path in folder.rglob("*"):
+            if {"node_modules", "__pycache__"} & set(path.relative_to(folder).parts):
+                continue
             if not path.is_file() or path.suffix not in AUDITED_SUFFIXES:
                 continue
             contents = path.read_text()
@@ -157,12 +197,30 @@ def main() -> int:
                 if token in contents:
                     errors.append(f"{path}: {reason}: {token}")
 
+            if re.search(r"(?m)^(<<<<<<<|=======|>>>>>>>)", contents):
+                errors.append(f"{path}: unresolved merge conflict")
+            for model in FOREIGN_MODELS.findall(contents):
+                errors.append(f"{path}: non-Codex model: {model}")
+            for target in re.findall(r"\]\(([^)]+)\)", contents) if path.suffix == ".md" else []:
+                if "://" in target or target.startswith("#"):
+                    continue
+                relative_target = target.split("#", 1)[0]
+                if (relative_target.startswith(("./", "../")) or relative_target.endswith((".md", ".sh", ".mjs", ".ts"))) and not (path.parent / relative_target).exists():
+                    errors.append(f"{path}: missing Markdown target {target}")
+
             for match in re.finditer(r"(?:references|playbooks)/[A-Za-z0-9_.\-/]+", contents):
                 relative = match.group(0).rstrip(".,:;)")
                 if not (folder / relative).exists():
                     errors.append(f"{path}: missing referenced path {relative}")
 
+    setup_text = (args.skills_root / "setup-pstack" / "SKILL.md").read_text() if (args.skills_root / "setup-pstack" / "SKILL.md").is_file() else ""
+    example = re.search(r"```md\n(.*?)\n```", setup_text, re.S)
+    if example and example.group(1).strip() != (REPO_ROOT / "config.example.md").read_text().strip():
+        errors.append("setup-pstack: configuration example differs from config.example.md")
+
     allowed_models = set(args.allowed_model) or DEFAULT_MODEL_SLUGS
+    for model in sorted(allowed_models - MODEL_EFFORTS.keys()):
+        errors.append(f"unverified Codex model allowlist entry: {model}")
     routes, route_errors = model_routes(args.config, allowed_models)
     errors.extend(route_errors)
     route_names = set(routes)

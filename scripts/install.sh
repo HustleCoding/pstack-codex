@@ -8,11 +8,18 @@ skills_dir="$codex_home/skills"
 backup_dir="$codex_home/backups/pstack-codex-$(date -u +%Y%m%dT%H%M%SZ)"
 dry_run=false
 
+if [[ $# -gt 1 || ( $# -eq 1 && $1 != "--dry-run" ) ]]; then
+  echo "usage: install.sh [--dry-run]" >&2
+  exit 2
+fi
 if [[ ${1:-} == "--dry-run" ]]; then
   dry_run=true
 fi
 
-mkdir -p "$skills_dir"
+python3 "$repo_root/scripts/audit.py"
+if ! $dry_run; then
+  mkdir -p "$skills_dir"
+fi
 
 while IFS= read -r name; do
   [[ -n "$name" ]] || continue
@@ -34,12 +41,15 @@ while IFS= read -r name; do
   fi
 
   if [[ -e "$target_dir" ]]; then
-    mkdir -p "$backup_dir"
+    if [[ ! -d "$backup_dir" ]]; then
+      mkdir -p "$codex_home/backups"
+      backup_dir=$(mktemp -d "$codex_home/backups/pstack-codex-$(date -u +%Y%m%dT%H%M%SZ).XXXXXX")
+    fi
     mv "$target_dir" "$backup_dir/$name"
   fi
 
   mkdir -p "$target_dir"
-  cp -R "$source_dir/." "$target_dir/"
+  tar -C "$source_dir" --exclude=node_modules --exclude=__pycache__ -cf - . | tar -C "$target_dir" -xf -
 done < "$repo_root/manifest.txt"
 
 if $dry_run; then

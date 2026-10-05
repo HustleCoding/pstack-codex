@@ -7,52 +7,48 @@ description: Spawn three parallel review subagents over the active transcript, s
 
 Mine the current conversation for durable learnings, then route them into skill edits.
 
+For a model override, spawn a fresh child with minimal task-local context (`fork_turns: "none"` where supported). Full-history forks inherit model and effort.
+
 ## When to invoke
 
-- The user said "reflect" or "/reflect".
-- A complex task (5+ tool calls) just landed cleanly and the recipe is worth keeping.
-- The agent hit dead ends, found the working path, and the path generalizes.
-- The user corrected the agent's approach mid-task.
-- A non-trivial workflow emerged that isn't captured anywhere.
-
-Skip when the conversation is trivial, off-topic, or already covered by an existing skill the parent followed correctly. One-offs are not learnings.
+Invoke when the user says "reflect" or "/reflect". Skip when the conversation is trivial, off-topic, or already covered by an existing skill the parent followed correctly. One-offs are not learnings.
 
 ## Process
 
-### 1. Scope the active task
+### 1. Locate the active transcript
 
-Use the current Codex conversation and task context. Collaboration agents spawned with conversation context already receive the active transcript. If a reviewer cannot receive that context, write a tight digest containing the request, decisions, failed paths, evidence, and final result. Do not scan unrelated task histories or memory files.
+Use the active conversation and its scoped Codex task history or a supplied transcript. Read Codex memory first when relevant. Never scan unrelated projects or chats. If the actual transcript is unavailable, write a digest and label that evidence limit.
 
 ### 2. Spawn three reviewers in parallel
 
-Spawn three Codex collaboration agents before waiting. Give them the active conversation context and forbid file or external-system writes. They may use read-only tools to verify citations. When model selection is available, use model route `reflect judgment`, model route `reflect tooling`, and model route `reflect divergent` respectively; otherwise inherit the session runtime.
+Launch up to three independent Codex collaboration reviewers, bounded by available slots. Keep them read-only and pass the appropriate prompt.
 
-| Lens | Prompt template |
-|---|---|
-| Judgment | `references/judgment-reviewer.md` |
-| Tooling | `references/tooling-reviewer.md` |
-| Divergent | `references/divergent-reviewer.md` |
+| Lens | Model route | Prompt |
+|---|---|---|
+| Judgment | model route `reflect judgment` | `references/judgment-reviewer.md` |
+| Tooling | model route `reflect tooling` | `references/tooling-reviewer.md` |
+| Divergent | model route `reflect divergent` | `references/divergent-reviewer.md` |
 
-Pass each template verbatim, substituting the active context or digest where marked.
+Read `~/.codex/pstack/config.md`. Pass a verified model and reasoning effort only when the collaboration schema supports both. Otherwise inherit. Give each reviewer the transcript or labeled digest and source pointers.
 
 ### 3. Synthesize
 
-Spawn one fresh synthesizer agent after the reviewers finish, or synthesize in the parent if no slot is available. When model selection is available, use model route `reflect synthesizer`. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list and spot-verifies citations with read-only tools.
+After the reviewers finish, use one fresh Codex collaboration agent with model route `reflect synthesizer`. Keep the task read-only. Use `references/synthesizer.md`, passing every reviewer's findings and the source pointers. The parent spot-checks citations and owns the final Accepted / Rejected / Backlog judgment.
 
 ### 4. Structural enforcement check
 
-Sanity-check the synthesizer's Accepted list. For any item that would be enforced more reliably by a lint rule, script, metadata flag, or runtime check, move it from Accepted to Backlog. The synthesizer already applies this criterion; this is a final pass before edits land. See the **encode-lessons-in-structure** principle skill.
+Sanity-check the synthesizer's Accepted list. For any item that would be enforced more reliably by a lint rule, script, metadata flag, or runtime check, move it from Accepted to Backlog. See the **encode-lessons-in-structure** principle skill.
 
 ### 5. Apply
 
-Before applying any Accepted edit, present the synthesizer's full Accepted/Rejected/Backlog output to the user and wait for explicit approval. The user picks which subset to apply and may redirect routings. Skill changes affect every future agent in the org; do not auto-apply.
+Before applying any Accepted edit, present the synthesizer's full Accepted/Rejected/Backlog output to the user and wait for explicit approval. The user picks which subset to apply and may redirect routings. Skill changes affect every future agent in the org. Do not auto-apply.
 
-Do not file Backlog items externally unless the user explicitly asks.
+Keep backlog items local unless the user explicitly authorized writing to the tracker. Apply only the skill edits the user selected or previously authorized. A reflection request alone does not authorize global skill or memory changes.
 
 For each approved Accepted item, follow the Routing field exactly:
 
 - Trivial existing-skill edit (a one-line bullet, a tightened sentence, a stale fact corrected): parent does directly.
-- Substantive existing-skill edit (a new section, a new pattern table, more than ~10 lines): hand to Codex's `skill-creator` skill and run its draft / test / iterate loop.
+- Substantive existing-skill edit (a new section, a new pattern table, more than ~10 lines): hand to the installed `skill-creator` skill and run its draft / test / iterate loop.
 - `tune description: <skill path>` (the skill exists but didn't trigger when it should have): hand to `skill-creator` and run its description-optimization loop.
 - `new skill via skill-creator: <kebab-name>`: hand creation to `skill-creator`. Do not invent the shape ad hoc.
 
