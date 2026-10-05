@@ -2,6 +2,8 @@
 
 Invoked at the end of every other playbook.
 
+**Publication scope.** Push and publish a PR only when the user's request or existing session authorization includes publication. Otherwise finish the local change and report it for review. A workflow trigger alone does not grant publication permission. Existing authorization counts; do not ask again when publication is already in scope.
+
 **Worktree.** Reuse a suitable checkout or attached worktree. Give concurrent writers isolated worktrees or output paths. Prefer managed Codex worktrees when available. Preserve unrelated changes and never reset an occupied checkout to make it usable.
 
 **Commits.** Commit liberally. Rebase into small, ordered commits before opening PRs. Each commit is a future PR: landable, ordered to tell the story. Amend when the fix belongs in a just-made commit. New commit when separable.

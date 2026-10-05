@@ -44,13 +44,22 @@ if (raw[0] === "---") {
 }
 
 const lines = [];
-let fence = false;
+let fence = null;
 for (let i = start; i < raw.length; i++) {
 	const text = raw[i];
 	const n = i + 1;
-	if (/^```/.test(text)) fence = !fence;
-	lines.push({ n, text, code: fence });
-	if (fence) continue;
+	const marker = text.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+	if (fence) {
+		lines.push({ n, text, code: true });
+		if (marker && marker[1][0] === fence.char && marker[1].length >= fence.length && marker[2].trim() === "") fence = null;
+		continue;
+	}
+	if (marker && (marker[1][0] !== "`" || !marker[2].includes("`"))) {
+		fence = { char: marker[1][0], length: marker[1].length };
+		lines.push({ n, text, code: true });
+		continue;
+	}
+	lines.push({ n, text, code: false });
 	const prose = text
 		.replace(/`[^`]*`/g, "`")
 		.replace(/!\[[^\]]*\]\([^)]*\)/g, "")
@@ -60,6 +69,8 @@ for (let i = start; i < raw.length; i++) {
 	if (/: \S/.test(prose)) fail(n, "mid-sentence colon");
 }
 
+if (fence) fail(raw.length, "unclosed code fence");
+
 const h2 = (l) => (!l.code && l.text.startsWith("## ") ? l.text.slice(3).trim() : null);
 const sections = [];
 for (const l of lines) {
@@ -68,7 +79,7 @@ for (const l of lines) {
 	else if (sections.length) sections.at(-1).body.push(l);
 }
 const find = (title) => sections.find((s) => s.title === title);
-const bodyText = (s) => s.body.map((l) => l.text).join("\n");
+const bodyText = (s) => s.body.filter((l) => !l.code).map((l) => l.text).join("\n");
 const boxes = (ls) => ls.filter((l) => !l.code && BOX.test(l.text)).map((l) => ({ n: l.n, text: l.text.match(BOX)[1] }));
 
 const h1 = lines.findIndex((l) => !l.code && l.text.startsWith("# "));
@@ -76,7 +87,7 @@ if (h1 === -1) fail(1, "no H1 title");
 const howToRead = find("How to read this");
 if (!howToRead) fail(1, 'no "## How to read this" section');
 if (h1 !== -1 && howToRead) {
-	const intro = lines.slice(h1 + 1).filter((l) => l.n < howToRead.n && l.text.trim() !== "");
+	const intro = lines.slice(h1 + 1).filter((l) => !l.code && l.n < howToRead.n && l.text.trim() !== "");
 	if (intro.length >= 10) fail(lines[h1].n, `intro is ${intro.length} lines, under ten required`);
 	for (const marker of HOW_TO_READ_MARKERS) {
 		if (!bodyText(howToRead).includes(marker)) fail(howToRead.n, `How to read this lacks "${marker}"`);
@@ -143,6 +154,10 @@ for (const pr of prSections) {
 			const count = Number(laneSpec[1]);
 			if (numbers.length !== count || numbers.some((number, i) => number !== i + 1)) fail(live.n, `${pr.title}: lanes are [${numbers.join(",")}], expected 1 to ${count}`);
 		}
+		const regression = lanes.find((lane) => lane.m?.[1] === "1");
+		if (regression && (!regression.text.includes("Regression lane against trunk.") || !/same .+ scenario/.test(regression.text) || !regression.text.includes("trunk and head"))) {
+			fail(regression.n, `${pr.title}: lane 1 must declare a regression lane against trunk using the same scenario at trunk and head`);
+		}
 		for (const lane of lanes) {
 			if (!lane.m) fail(lane.n, `${pr.title}: live box is not a lane`);
 			else if (!/Save `[^`]+`/.test(lane.text)) fail(lane.n, `${pr.title}: lane ${lane.m[1]} names no evidence receipt`);
@@ -162,7 +177,7 @@ for (const pr of prSections) {
 		if (gate.rest.startsWith("None.")) {
 			if (gateBoxes.length) fail(gate.n, `${pr.title}: Review gate says None but has boxes`);
 		} else {
-			const text = gate.lines.map((l) => l.text).join("\n");
+			const text = gate.lines.filter((l) => !l.code).map((l) => l.text).join("\n");
 			if (gateBoxes.length === 0) fail(gate.n, `${pr.title}: Review gate has no box`);
 			for (const word of ["screenshot", "video", "operator"]) {
 				if (!text.includes(word)) fail(gate.n, `${pr.title}: Review gate lacks "${word}"`);

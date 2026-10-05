@@ -11,6 +11,7 @@ RULE = "Tests alone are not sufficient verification. A PR is verified only when 
 def plan(lanes=3):
     program = "\n".join(f"### {name}\n\n- [ ] Complete the task and save its output.\n" for name in ["Arm the program", "Spawn owners", "PR mechanics", "Verdict and merge", "Boot recipe"])
     live = "\n".join(f"- [ ] Lane {n}. Run the real CLI scenario. Save `lane-{n}.txt`. Pass when the persisted output matches the expected result." for n in range(1, lanes + 1))
+    live = live.replace("Lane 1. Run the real CLI scenario.", "Lane 1. Regression lane against trunk. Run the same CLI scenario at trunk and head. If trunk lacks the feature, record that and gate added behavior and final state.")
     return f"""# CLI update plan
 
 Update the CLI output for its users in PR1.
@@ -106,6 +107,36 @@ class PlanTests(unittest.TestCase):
         result = self.check(plan(3).replace("- [ ] Lane 2.", "- [ ] Missing lane 2."))
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("expected 1 to 3", result.stderr)
+
+    def test_missing_regression_comparison_fails(self):
+        for old, new in [("Regression lane against trunk.", ""), ("trunk and head", "head only"), ("same CLI scenario", "different CLI scenarios")]:
+            with self.subTest(old=old):
+                result = self.check(plan().replace(old, new))
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("must declare a regression lane", result.stderr)
+
+    def test_quoted_plan_cannot_supply_sections(self):
+        for fence in ["````", "~~~~"]:
+            with self.subTest(fence=fence):
+                result = self.check(fence + "\n```text\nquoted example\n```\n" + plan() + "\n" + fence)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("no H1 title", result.stderr)
+
+    def test_quoted_program_marker_cannot_satisfy_requirements(self):
+        result = self.check(plan().replace("Read installed playbooks before starting.", "~~~text\nRead installed playbooks before starting.\n~~~"))
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('lacks "Read installed playbooks"', result.stderr)
+
+    def test_closed_fences_do_not_hide_following_sections(self):
+        for opening, closing in [("````text", "`````"), ("~~~text", "~~~~")]:
+            with self.subTest(opening=opening):
+                result = self.check(opening + "\n```quoted\n```\n" + closing + "\n" + plan())
+                self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_unclosed_fence_fails(self):
+        result = self.check(plan() + "\n~~~text\nunfinished code")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("unclosed code fence", result.stderr)
 
     def test_missing_receipt_fails(self):
         result = self.check(plan().replace("Save `lane-1.txt`.", ""))
