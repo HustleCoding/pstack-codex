@@ -1,13 +1,13 @@
 ### Autonomous run
 
-**You own the exit condition. Define done, then drive to it without stopping.** For "going to bed", "run until done", or "keep checking until X".
+**You own the exit condition. Define done, then drive to it without stopping.**
 
-1. State the exit condition as a checkable predicate before the first iteration (tests green, repro fixed, all N PRs merged, pixel-diff zero). A vague goal stalls; a predicate lets you stop.
-2. Pick the Codex wake mechanism. Use a monitor or automation when the product exposes one. Inside an active turn, use event-aware polling or a watcher agent with waits short enough to keep the user informed. Size the fallback heartbeat to when the result is worth checking again.
+1. State the exit condition as a checkable predicate before the first iteration (tests green, repro fixed, all N PRs merged, pixel-diff zero).
+2. Pick the wake mechanism from available Codex tools. Use a watcher for CI or ref changes and bounded waits during active work. When the user requested later or recurring work, create a Codex heartbeat automation with a checkable exit condition. Notify only on meaningful changes, completion, failure, or required user action. If scheduling is unavailable, leave a durable checkpoint and report that limit.
 3. Each iteration makes the smallest change the evidence justifies, verifies it against the predicate, commits if it advanced, discards changes that didn't help. Belt-and-suspenders that "might help" gets reverted, not left to ride.
    Sequence the work via the **sequence-verifiable-units** principle skill, verifying each unit before the next instead of batching checks at the end.
-4. Mid-run discoveries are yours. Address broken skills, related bugs, flaky verifiers, review noise, tooling failures, orphaned follow-ups, and fixable drift yourself via poteto-mode. Put out-of-band fixes in their own change. Do not park reversible work for the human. Surface only irreversible actions, genuine product or preference calls no experiment can settle, or a real dead end. Keep the predicate as the main drive, and return to it after each side fix.
-5. Checkpoint every iteration via the **show-me-your-work** skill, a row for what changed and whether the predicate moved. A run with no trail can't be audited or resumed.
+4. Mid-run discoveries are yours. Address broken skills, related bugs, flaky verifiers, review noise, tooling failures, orphaned follow-ups, and fixable drift yourself via poteto-mode. Put out-of-band fixes in their own PR. Do not park reversible work for the human or use the available structured question tool. Surface only irreversible actions, genuine product or preference calls no experiment can settle, or a real dead end. Keep the predicate as the main drive, and return to it after each side fix.
+5. Checkpoint every iteration via the **show-me-your-work** skill, a row for what changed and whether the predicate moved.
 6. Stop when the predicate is met. A plateau is not a stop, so keep going and pivot your approach to push past it. Surface a genuine dead end rather than spinning, and never relax the predicate to declare victory.
 
 **Reply:** the exit condition, iterations run, what landed, what was discarded, final predicate state.

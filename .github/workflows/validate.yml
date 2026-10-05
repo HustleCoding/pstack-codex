@@ -1,0 +1,38 @@
+name: Validate Codex port
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.14'
+      - name: Audit skills and model routes
+        run: ./scripts/audit.py
+      - name: Check installer syntax
+        run: bash -n scripts/install.sh scripts/check-upstream.sh
+      - name: Test the audit, plan checker, and isolated installation
+        run: python3 -m unittest discover -s tests -v
+      - name: Install PR watcher dependencies
+        working-directory: skills/poteto-mode/scripts
+        run: bun install --frozen-lockfile
+      - name: Test and typecheck the PR watcher
+        working-directory: skills/poteto-mode/scripts
+        run: |
+          bun run test
+          bun run typecheck
