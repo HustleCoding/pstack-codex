@@ -13,7 +13,7 @@ Install from [pstack-codex](https://github.com/HustleCoding/pstack-codex) with `
 
 Run **setup-pstack** to choose verified Codex models, reasoning efforts, and bounded fan-out. It writes `~/.codex/pstack/config.md`. Existing settings remain intentional until the user asks to change them. A missing file means children inherit the session unless a workflow supplies a verified route.
 
-If the configuration is missing and the question concerns onboarding, setup, cost, or which models will run, offer setup now or later at most once per chat. Answer the original question either way. If the user has already asked to configure it, proceed within that request. If they defer, explain inheritance and any verified workflow defaults. Do not replace an existing configuration merely because upstream defaults changed.
+If the configuration is missing and the question concerns setup, cost, or which models will run, offer setup now or later at most once per chat. For onboarding, offer to review the current model and budget choices even when the file exists: a fresh installer seeds defaults, so file existence does not prove the user chose those settings. The once-per-chat limit covers both offers. Answer the original question either way. If the user has already asked to configure it, proceed within that request. If they defer, explain inheritance and any verified workflow defaults. Do not replace an existing configuration merely because upstream defaults changed.
 
 Suggested prompt. "Use setup-pstack. Configure balanced Codex-only routes and explain the model choices."
 
