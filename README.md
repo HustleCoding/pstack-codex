@@ -10,7 +10,7 @@ The engineering principles and playbooks remain pstack's. The runtime integratio
 - Codex browser, computer-use, GitHub, and automation tools
 - `.codex/skills` for global and project-local skills
 
-The port tracks upstream **0.15.10** at [`4e5b1cf`](https://github.com/cursor/plugins/commit/4e5b1cf2ccb0ea3716f08c8ee0a5856b5ab93536), reviewed on October 5, 2026. It contains **50 skills**, including 24 engineering principles. This update adds `poteto-help`, `correct`, `benchmark-checklist`, three principle skills, a checked multi-PR plan, stronger architecture screening, and evidence-backed benchmark and PR verification guidance. See [the port record](docs/upstream-port.md) for adaptations and exclusions.
+The port tracks upstream **0.15.15** at [`ccb5507`](https://github.com/cursor/plugins/commit/ccb5507cec1546dc88135c1139c811e6c59115ba), reviewed on October 9, 2026. It contains **50 skills**, including 24 engineering principles. This update adds prompting references, copyable recipes, missing-configuration guidance, and explicit reasoning-budget targets. The Codex-only Sol, Luna, and Astra routes remain the balanced defaults. See [the port record](docs/upstream-port.md) for adaptations and exclusions.
 
 ## Install
 
@@ -68,6 +68,10 @@ gh auth status
 ```
 
 The watcher installs its pinned dependencies on first use and reads GitHub state without granting merge authority. Babysit stops at merge-ready. Shipping requires an explicit request to merge, land, or enable merge when ready.
+
+Read the [Codex usage guide](docs/usage.md) for prompting, verification, longer runs, and repeated mistakes. Ask `Use poteto-help` for one prompt tailored to your task. Help answers the question without starting that workflow.
+
+Budget profiles are explicit targets: balanced keeps the configured role efforts, unlimited targets max, large targets xhigh, medium targets high, and small targets medium. Setup preserves model choices and uses the highest supported effort at or below the target. Inherited aliases stay inherited. Updating the skills preserves your existing global model configuration; rerun setup only when you want to change it.
 
 ## Check upstream
 

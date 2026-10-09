@@ -1,5 +1,23 @@
 # Upstream port record
 
+## October 9, 2026: upstream 0.15.15
+
+Reviewed all five pstack commits from `4e5b1cf2ccb0ea3716f08c8ee0a5856b5ab93536` through [`ccb5507cec1546dc88135c1139c811e6c59115ba`](https://github.com/cursor/plugins/commit/ccb5507cec1546dc88135c1139c811e6c59115ba). The latter is the reviewed repository head; the latest pstack-specific commit is `df58112`.
+
+| Upstream commit | Disposition |
+|---|---|
+| [00b52d9](https://github.com/cursor/plugins/commit/00b52d9) | Keep the help/work boundary. Do not import Cursor's typed-only frontmatter; this port preserves Codex's existing discovery policy and name/description frontmatter. |
+| [807c031](https://github.com/cursor/plugins/commit/807c031) | Port prompting and recipe references. Adapt recurring work to requested Codex heartbeat automations, constrain worker fan-out, and preserve authorization boundaries while away. |
+| [2cbf585](https://github.com/cursor/plugins/commit/2cbf585) | Adapt the guide additions into `docs/usage.md` and the help references: evidence, prototypes, verifiable plans, repeatable harnesses, benchmarks, repeated mistakes, and longer-run handoffs. Exclude Cursor cloud projects, Bot UI, and the upstream Slack automation pack. |
+| [1e56b29](https://github.com/cursor/plugins/commit/1e56b29) | Offer setup now or later once per chat when configuration is missing and relevant, and review seeded defaults during onboarding; answer the original question either way and preserve existing choices. |
+| [df58112](https://github.com/cursor/plugins/commit/df58112) | Port explicit budget targets: unlimited now means max, with supported-effort fallback. Preserve balanced Codex-only model routes and three-seat panels. Exclude the switch to non-Codex providers, related wording churn, Cursor plugin metadata, and the excluded orchestration test fixture rename. |
+
+The Codex-only routes still match the active collaboration schema. Balanced keeps the existing efforts. Updating skills does not migrate a user's persisted configuration or silently raise their budget. The help references and usage guide explain actual Codex behavior rather than claiming Cursor invocation controls or cloud isolation.
+
+Validation for this update includes the repository audit, existing unit tests, skill validation for the changed skills, and link checks for the new documentation. Global installation is verified against repository content and preserves existing model configuration. These are packaging checks, not claims of end-to-end workflow evaluation.
+
+## October 5, 2026: upstream 0.15.10
+
 This update ports the pstack changes between `9490cc1cf95d5de2e4941196cdac00dd861812a4` and [`4e5b1cf2ccb0ea3716f08c8ee0a5856b5ab93536`](https://github.com/cursor/plugins/commit/4e5b1cf2ccb0ea3716f08c8ee0a5856b5ab93536). The reviewed upstream version is 0.15.10, checked on October 5, 2026. All 25 pstack commits in that range were reviewed.
 
 The original MIT license and attribution remain. Codex runtime instructions take precedence over upstream Cursor integration.

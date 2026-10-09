@@ -9,8 +9,8 @@
 ## Budget
 
 - profile: balanced
-- policy: preserve the per-role efforts below; a requested large, medium, or small budget maps routes to xhigh, high, or medium only when that model supports it
-- verified: 2026-10-05 from the active Codex collaboration schema
+- policy: balanced preserves the per-role efforts below; unlimited, large, medium, and small target max, xhigh, high, and medium respectively, using a supported effort at or below the target
+- verified: 2026-10-09 from the active Codex collaboration schema
 
 ## Model routes
 
