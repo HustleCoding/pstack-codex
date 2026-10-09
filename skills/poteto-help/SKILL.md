@@ -13,6 +13,8 @@ Install from [pstack-codex](https://github.com/HustleCoding/pstack-codex) with `
 
 Run **setup-pstack** to choose verified Codex models, reasoning efforts, and bounded fan-out. It writes `~/.codex/pstack/config.md`. Existing settings remain intentional until the user asks to change them. A missing file means children inherit the session unless a workflow supplies a verified route.
 
+If the configuration is missing and the question concerns onboarding, setup, cost, or which models will run, offer setup now or later at most once per chat. Answer the original question either way. If the user has already asked to configure it, proceed within that request. If they defer, explain inheritance and any verified workflow defaults. Do not replace an existing configuration merely because upstream defaults changed.
+
 Suggested prompt. "Use setup-pstack. Configure balanced Codex-only routes and explain the model choices."
 
 Use **poteto-mode** with a concrete goal and a check that can pass or fail. Invoke it at the start of each new task. For a persistent project preference, the user can ask to add a scoped instruction to AGENTS.md. Do not assume a Custom Mode is available.
@@ -20,6 +22,10 @@ Use **poteto-mode** with a concrete goal and a check that can pass or fail. Invo
 Suggested prompt. "Use poteto-mode. Diagnose this bug, prove the cause, fix it, and verify the user-visible result."
 
 The parent model is chosen in Codex's model picker. A route cannot change the active parent's model. Child overrides require a compatible collaboration schema and a fresh child with minimal task-local context; full-history forks inherit. When overrides are unavailable, report inheritance.
+
+## Help with a prompt
+
+Read [references/prompting.md](references/prompting.md) before helping word a task or steer a drifting run. It covers goals, done checks, evidence, context, and constraints. Use [references/recipes.md](references/recipes.md) for a matching copyable example. Lead with the answer, give at most one adapted prompt unless the user asks for more, and link the skill or reference that supports it. Help does not start the example workflow.
 
 ## Pick a skill
 

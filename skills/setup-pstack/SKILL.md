@@ -26,7 +26,7 @@ Read `~/.codex/pstack/config.md` when it exists. Treat its values as the current
 
 ## 3. Choose budget and recommend settings
 
-Use a stated budget or infer it from the request. If none is stated, recommend balanced, preserving the role-specific efforts. For a budget-focused setup, offer unlimited (keep role efforts), large (xhigh), medium (high), or small (medium). Apply the target only when the model supports it. Keep intentional model overrides and list retired routes such as `how critics` and `cross-judge` before dropping them.
+Use a stated budget or infer it from the request. If none is stated, recommend balanced, preserving the role-specific efforts. For a budget-focused setup, offer unlimited (max), large (xhigh), medium (high), or small (medium). Apply the target to every explicit route, including panel entries, while preserving model choices. If the target is unsupported, use the highest supported effort at or below it on the same model; if none exists, report the missing choice. Inherited aliases stay inherited. Unlimited targets max, even for models that also support ultra; balanced keeps the per-role efforts. Keep intentional model overrides and list retired routes such as `how critics` and `cross-judge` before dropping them.
 
 Show the proposed values and the reason for any meaningful change. Prefer the smallest useful fan-out. Three independent candidates or reviewers is the default when parallel judgment matters, bounded by the session's concurrency limit. Use one agent for narrow work and no subagent when delegation would add no independent value.
 
@@ -48,8 +48,8 @@ Use this shape, adjusted to the capabilities you verified:
 ## Budget
 
 - profile: balanced
-- policy: preserve the per-role efforts below; a requested large, medium, or small budget maps routes to xhigh, high, or medium only when that model supports it
-- verified: 2026-10-05 from the active Codex collaboration schema
+- policy: balanced preserves the per-role efforts below; unlimited, large, medium, and small target max, xhigh, high, and medium respectively, using a supported effort at or below the target
+- verified: 2026-10-09 from the active Codex collaboration schema
 
 ## Model routes
 
@@ -97,7 +97,7 @@ Use this shape, adjusted to the capabilities you verified:
 
 Keep the file factual. Omit unavailable integrations instead of leaving aspirational settings.
 
-The example models were verified on 2026-10-05. Re-check the actual session before writing them. If a model is unavailable, choose a verified Codex model for that role or inherit, and disclose the change. Never route to another provider. Luna supports up to max, not ultra.
+The example models were verified on 2026-10-09. Re-check the actual session before writing them. If a model is unavailable, choose a verified Codex model for that role or inherit, and disclose the change. Never route to another provider. Luna supports up to max, not ultra.
 
 The model-route labels are stable identifiers used by pstack workflow skills. Every route entry uses `model@reasoning_effort`, or `inherit-parent` to omit both fields. `auto` is an alias for inheritance, not permission to choose another provider; panel entries are comma-separated and launch one child per entry in order. The `Parent task` recommendation is advisory because a child-spawn setting cannot change the active task. For an override, use a fresh child with minimal task-local context. Full-history forks inherit model and effort. When the active collaboration tool cannot select a model or effort, omit both fields and inherit the session runtime.
 
