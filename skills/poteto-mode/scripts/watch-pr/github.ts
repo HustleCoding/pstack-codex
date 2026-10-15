@@ -350,6 +350,41 @@ function passKey(comment: T.ReviewComment | null): string | null {
   }
   return null;
 }
+export function parseCheckRollupPage(value: unknown): T.RollupPage {
+  const response = record(value, "check rollup response");
+  if (response.errors !== undefined && list(response.errors, "errors").length > 0)
+    missing("check rollup response without GraphQL errors", response.errors);
+  const commits = list(
+    at(value, ["data", "repository", "pullRequest", "commits", "nodes"]),
+    "commits.nodes"
+  );
+  if (commits.length === 0) return { checks: [], endCursor: null };
+  const commit = record(
+    at(commits[commits.length - 1], ["commit"]),
+    "commit"
+  );
+  if (commit.statusCheckRollup === null)
+    return { checks: [], endCursor: null };
+  const contexts = record(
+    at(commit, ["statusCheckRollup", "contexts"]),
+    "contexts"
+  );
+  const checks = list(contexts.nodes, "contexts.nodes").map((node) => {
+    const check = mapRollupNode(node);
+    if (check === null) missing("contexts.nodes.__typename", node);
+    return check;
+  });
+  const page = record(contexts.pageInfo, "contexts.pageInfo");
+  if (typeof page.hasNextPage !== "boolean")
+    missing("contexts.pageInfo.hasNextPage", page.hasNextPage);
+  const cursor = optionalString(
+    page.endCursor,
+    "contexts.pageInfo.endCursor"
+  );
+  if (page.hasNextPage && (cursor === null || cursor.trim() === ""))
+    missing("contexts.pageInfo.endCursor (non-empty continuation required)", cursor);
+  return { checks, endCursor: page.hasNextPage ? cursor : null };
+}
 export function parseReviewThreadPage(value: unknown): T.ReviewThreadPage {
   const reviewThreads = record(
     at(value, ["data", "repository", "pullRequest", "reviewThreads"]),
@@ -547,34 +582,9 @@ export class GhGitHubReader implements T.GitHubReader {
   ): Promise<T.RollupPage> {
     const argv = graphqlArgs(PR_CHECK_ROLLUP_QUERY, context);
     if (after !== null) argv.push("-f", `after=${after}`);
-    const value = await runJson(argv);
-    const commits = list(
-      at(value, ["data", "repository", "pullRequest", "commits", "nodes"]),
-      "commits.nodes"
-    );
-    if (commits.length === 0) return { checks: [], endCursor: null };
-    const commit = record(
-      at(commits[commits.length - 1], ["commit"]),
-      "commit"
-    );
-    if (commit.statusCheckRollup === null)
-      return { checks: [], endCursor: null };
-    const contexts = record(
-      at(commit, ["statusCheckRollup", "contexts"]),
-      "contexts"
-    );
-    const checks = list(contexts.nodes, "contexts.nodes")
-      .map(mapRollupNode)
-      .filter((check): check is T.Check => check !== null);
-    const page = record(contexts.pageInfo, "contexts.pageInfo");
-    if (typeof page.hasNextPage !== "boolean")
-      missing("contexts.pageInfo.hasNextPage", page.hasNextPage);
-    const cursor = optionalString(
-      page.endCursor,
-      "contexts.pageInfo.endCursor"
-    );
-    return { checks, endCursor: page.hasNextPage && cursor ? cursor : null };
+    return parseCheckRollupPage(await runJson(argv));
   }
+
   async reviewThreadPage(
     context: T.PrContext,
     after: string | null
@@ -616,21 +626,30 @@ export async function resolveChecks(
   const fast = await reader.checksFastPath(context);
   const direct = fast.kind === "checks" ? nonEmpty(fast.checks) : null;
   if (direct !== null) return { source: "gh-pr-checks", checks: direct };
+  return resolveRollupChecks(reader, context);
+}
+export async function resolveRollupChecks(
+  reader: T.GitHubReader,
+  context: T.PrContext
+): Promise<T.CheckRead> {
   const checks: T.Check[] = [];
+  const cursors = new Set<string>();
   let after: string | null = null;
   do {
     const page = await reader.checkRollupPage(context, after);
+    if (page.endCursor !== null) {
+      if (page.endCursor.trim() === "" || cursors.has(page.endCursor))
+        missing("contexts.pageInfo.endCursor (invalid or repeated cursor)", page.endCursor);
+      cursors.add(page.endCursor);
+    }
     checks.push(...page.checks);
     after = page.endCursor;
   } while (after !== null);
   const fallback = nonEmpty(checks);
   if (fallback !== null) return { source: "graphql-rollup", checks: fallback };
-  const suffix =
-    fast.kind === "unusable"
-      ? `fast path exit=${fast.exitCode}; GraphQL rollup was empty${firstLine(fast.stderr) ? `; ${firstLine(fast.stderr)}` : ""}`
-      : "fast path and GraphQL rollup were empty";
-  throw new ChecksUnavailable(`could not read PR checks: ${suffix}`);
+  throw new ChecksUnavailable("could not read PR checks: GraphQL rollup was empty");
 }
+
 export async function resolveReviewThreads(
   reader: T.GitHubReader,
   context: T.PrContext

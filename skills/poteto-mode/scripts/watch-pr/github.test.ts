@@ -6,6 +6,7 @@ import {
   mapRollupNode,
   orderStack,
   parseFastCheck,
+  parseCheckRollupPage,
   parsePullRequest,
   parseReviewThreadPage,
   resolveChecks,
@@ -78,6 +79,48 @@ describe("checks fallback chain", () => {
       ChecksUnavailable
     );
     expect(reader.calls).toEqual(["checksFastPath", "checkRollupPage:null"]);
+  });
+});
+
+describe("complete rollup proof", () => {
+  function response(nodes: readonly unknown[], pageInfo: unknown) {
+    return { data: { repository: { pullRequest: { commits: { nodes: [{
+      commit: { statusCheckRollup: { contexts: { nodes, pageInfo } } },
+    }] } } } } };
+  }
+
+  it("rejects missing continuation cursors instead of accepting partial contexts", () => {
+    for (const endCursor of [undefined, null, "", " "]) {
+      expect(() => parseCheckRollupPage(response([], {
+        hasNextPage: true, endCursor,
+      }))).toThrow(WatcherQueryError);
+    }
+  });
+
+  it("rejects unknown context types rather than silently losing proof", () => {
+    expect(() => parseCheckRollupPage(response(
+      [{ __typename: "FutureNode" }],
+      { hasNextPage: false, endCursor: null },
+    ))).toThrow(WatcherQueryError);
+  });
+
+  it("rejects a malformed context or missing page metadata", () => {
+    expect(() => parseCheckRollupPage(response(
+      [{ __typename: "CheckRun", status: "COMPLETED", conclusion: "SUCCESS" }],
+      { hasNextPage: false, endCursor: null },
+    ))).toThrow(WatcherQueryError);
+    expect(() => parseCheckRollupPage(response([], undefined))).toThrow(WatcherQueryError);
+  });
+
+  it("rejects repeated continuation cursors instead of accepting or looping", async () => {
+    const reader = fakeReader({
+      fastPath: { kind: "checks", checks: [] },
+      rollupPages: [
+        { checks: [passingCheck()], endCursor: "next" },
+        { checks: [passingCheck()], endCursor: "next" },
+      ],
+    });
+    await expect(resolveChecks(reader, context)).rejects.toThrow(WatcherQueryError);
   });
 });
 

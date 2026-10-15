@@ -102,6 +102,12 @@ export interface GitHubMergeRefusal {
 export type GitHubMergeAllowed =
   | {
       readonly kind: "allowed";
+      readonly basis: "code-review-gate";
+      readonly mergeStateStatus: "BLOCKED";
+      readonly headRollupState: "FAILURE";
+    }
+  | {
+      readonly kind: "allowed";
       readonly basis: "merge-state";
       readonly mergeStateStatus: Exclude<MergeStateStatus, "BLOCKED">;
       readonly headRollupState: RollupState;

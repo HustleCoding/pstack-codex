@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { WatcherQueryError, parseFastCheck } from "./github.ts";
+import { WatcherQueryError, parseCheckRollupPage, parseFastCheck } from "./github.ts";
 import {
   applyQueueSnapshot,
   assessGitHubMerge,
@@ -69,18 +69,16 @@ describe("readiness truth table", () => {
   });
 
   it("does not wait on an owner-approval ACTION_REQUIRED gate", async () => {
+    const gate = parseFastCheck({
+      name: "Code Review Gate",
+      state: "ACTION_REQUIRED",
+      bucket: "fail",
+    });
     const reader = fakeReader({
-      fastPath: {
-        kind: "checks",
-        checks: [
-          passingCheck(),
-          parseFastCheck({
-            name: "Code Review Gate",
-            state: "ACTION_REQUIRED",
-            bucket: "fail",
-          }),
-        ],
-      },
+      facts: { mergeStateStatus: "BLOCKED" },
+      commitRollups: [{ oid: "head", state: "FAILURE" }],
+      fastPath: { kind: "checks", checks: [passingCheck(), gate] },
+      rollupPages: [{ checks: [passingCheck(), gate], endCursor: null }],
     });
     const snapshot = await readSnapshot({
       reader,
@@ -113,6 +111,124 @@ describe("readiness truth table", () => {
       kind: "blocker",
       blocker: { kind: "failing-checks" },
     });
+  });
+});
+
+describe("owner gate aggregate reconciliation", () => {
+  const gate = parseFastCheck({
+    name: "Code Review Gate",
+    state: "ACTION_REQUIRED",
+    bucket: "fail",
+  });
+  function readerWithGate(overrides: Parameters<typeof fakeReader>[0] = {}) {
+    return fakeReader({
+      facts: { mergeStateStatus: "BLOCKED" },
+      commitRollups: [{ oid: "head", state: "FAILURE" }],
+      fastPath: { kind: "checks", checks: [passingCheck(), gate] },
+      ...overrides,
+    });
+  }
+  function snapshot(reader: GitHubReader) {
+    return readSnapshot({
+      reader,
+      context: context(1),
+      pendingHistory: "include",
+      allowDraft: false,
+    });
+  }
+
+  it("uses every rollup page to prove a gate-only aggregate failure", async () => {
+    const row = await snapshot(readerWithGate({
+      rollupPages: [
+        { checks: [passingCheck()], endCursor: "next" },
+        { checks: [gate], endCursor: null },
+      ],
+    }));
+    expect(classifyPr(row).kind).toBe("ready");
+    expect(row).toMatchObject({ ci: { source: "graphql-rollup" } });
+  });
+
+  it("preserves a visible failed check even when the rollup list differs", async () => {
+    const row = await snapshot(readerWithGate({
+      fastPath: { kind: "checks", checks: [failedCheck("visible"), gate] },
+      rollupPages: [{ checks: [passingCheck(), gate], endCursor: null }],
+    }));
+    expect(classifyPr(row)).toMatchObject({
+      kind: "blocker",
+      blocker: { kind: "failing-checks", ci: {
+        kind: "ci-failing", failed: [{ name: "visible" }],
+      } },
+    });
+  });
+
+  it("reports a non-gate failure hidden on a later rollup page", async () => {
+    const row = await snapshot(readerWithGate({
+      rollupPages: [
+        { checks: [passingCheck(), gate], endCursor: "next" },
+        { checks: [failedCheck("hidden")], endCursor: null },
+      ],
+    }));
+    expect(classifyPr(row)).toMatchObject({
+      kind: "blocker",
+      blocker: { kind: "failing-checks", ci: {
+        kind: "ci-failing", failed: [{ name: "hidden" }],
+      } },
+    });
+  });
+
+  it("keeps pending non-gate contexts waiting", async () => {
+    const row = await snapshot(readerWithGate({
+      rollupPages: [{
+        checks: [passingCheck(), gate, pendingCheck("hidden-pending")],
+        endCursor: null,
+      }],
+    }));
+    expect(classifyPr(row)).toMatchObject({
+      kind: "waiting", pending: [{ name: "hidden-pending" }],
+    });
+  });
+
+  it("retains GitHub refusal when the complete rollup does not explain the failure", async () => {
+    for (const checks of [[passingCheck()], [pendingCheck("gate-missing")]]) {
+      const row = await snapshot(readerWithGate({
+        rollupPages: [{ checks, endCursor: null }],
+      }));
+      expect(row).toMatchObject({ ci: { kind: "ci-github-rejected" } });
+      expect(classifyPr(row).kind).toBe("blocker");
+    }
+  });
+
+  it("fails closed when rollup proof is empty or unavailable", async () => {
+    await expect(snapshot(readerWithGate())).rejects.toThrow(WatcherQueryError);
+    const reader = readerWithGate();
+    await expect(snapshot({
+      ...reader,
+      async checkRollupPage() {
+        throw new WatcherQueryError({
+          kind: "command-exit", retryable: true, code: 1, detail: "unavailable",
+        });
+      },
+    })).rejects.toThrow(WatcherQueryError);
+  });
+
+  it("fails closed on malformed rollup proof and GraphQL partial errors", async () => {
+    for (const response of [{}, { errors: [{ message: "denied" }], data: {} }]) {
+      await expect(snapshot({
+        ...readerWithGate(),
+        async checkRollupPage() { return parseCheckRollupPage(response); },
+      })).rejects.toThrow(WatcherQueryError);
+    }
+  });
+
+  it("reuses complete fallback contexts when they already explain the aggregate", async () => {
+    const reader = readerWithGate({
+      fastPath: { kind: "unusable", exitCode: 1, stderr: "unavailable" },
+      rollupPages: [{ checks: [passingCheck(), gate], endCursor: null }],
+    });
+    expect(classifyPr(await snapshot(reader)).kind).toBe("ready");
+    expect(reader.calls.filter((call) => call.startsWith("checkRollupPage"))).toEqual([
+      "checkRollupPage:null",
+    ]);
   });
 });
 
