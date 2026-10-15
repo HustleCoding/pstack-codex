@@ -1,4 +1,9 @@
-import { WatcherQueryError, resolveChecks } from "./github.ts";
+import {
+  WatcherQueryError,
+  resolveChecks,
+  resolveRollupChecks,
+  resolveReviewThreads,
+} from "./github.ts";
 import type * as T from "./types.ts";
 import { nonEmpty } from "./types.ts";
 export function assessGitHubMerge(args: {
@@ -28,7 +33,8 @@ export function assessGitHubMerge(args: {
 }
 async function mergeAssessment(
   reader: T.GitHubReader,
-  facts: T.PullRequestFacts
+  facts: T.PullRequestFacts,
+  checks: T.CheckRead
 ) {
   const commits = await reader.commitRollups(facts.context);
   const headRollupState =
@@ -36,16 +42,39 @@ async function mergeAssessment(
       ? null
       : (commits.find((commit) => commit.oid === facts.headRefOid)?.state ??
         null);
+  let github = assessGitHubMerge({
+    mergeStateStatus: facts.mergeStateStatus,
+    headRollupState,
+  });
+  if (
+    github.kind === "refused" &&
+    github.headRollupState === "FAILURE" &&
+    !checks.checks.some((check) => check.kind === "failed") &&
+    checks.checks.some(isOwnerApprovalGate)
+  ) {
+    if (checks.source !== "graphql-rollup")
+      checks = await resolveRollupChecks(reader, facts.context);
+    if (
+      checks.checks.some(isOwnerApprovalGate) &&
+      checks.checks.every((check) => check.kind !== "failed")
+    )
+      github = {
+        ...github,
+        kind: "allowed",
+        basis: "code-review-gate",
+        headRollupState: "FAILURE",
+      };
+  }
   return {
+    checks,
     hadPreviousPassingCi: commits.some(
       (commit) => commit.oid !== facts.headRefOid && commit.state === "SUCCESS"
     ),
-    github: assessGitHubMerge({
-      mergeStateStatus: facts.mergeStateStatus,
-      headRollupState,
-    }),
+    github,
   };
 }
+const isOwnerApprovalGate = (check: T.Check): boolean =>
+  check.kind === "code-review-gate" && check.reportedState === "ACTION_REQUIRED";
 const AUTOMATION_TOKENS = [
   "bugbot",
   "security review",
@@ -63,20 +92,19 @@ export async function readSnapshot(args: {
     return { kind: "merged", context: args.context, facts };
   if (facts.state === "CLOSED")
     return { kind: "closed", context: args.context, facts };
-  const threads = await args.reader.reviewThreads(args.context);
-  const checks = await resolveChecks(args.reader, args.context);
-  const failed = nonEmpty(
-    checks.checks.filter(
-      (check): check is T.FailedCheck => check.kind === "failed"
-    )
-  );
+  const threads = await resolveReviewThreads(args.reader, args.context);
+  let checks = await resolveChecks(args.reader, args.context);
   const pending = nonEmpty(
     checks.checks.filter(
       (check): check is T.PendingCheck => check.kind === "pending"
     )
   );
   let ci: T.CiState;
-  if (failed === null && pending !== null && args.pendingHistory === "omit")
+  if (
+    pending !== null &&
+    args.pendingHistory === "omit" &&
+    !checks.checks.some((check) => check.kind === "failed")
+  )
     ci = {
       kind: "ci-pending",
       source: checks.source,
@@ -86,7 +114,18 @@ export async function readSnapshot(args: {
       hadPreviousPassingCi: false,
     };
   else {
-    const merge = await mergeAssessment(args.reader, facts);
+    const merge = await mergeAssessment(args.reader, facts, checks);
+    checks = merge.checks;
+    const failed = nonEmpty(
+      checks.checks.filter(
+        (check): check is T.FailedCheck => check.kind === "failed"
+      )
+    );
+    const pending = nonEmpty(
+      checks.checks.filter(
+        (check): check is T.PendingCheck => check.kind === "pending"
+      )
+    );
     const base = {
       source: checks.source,
       all: checks.checks,

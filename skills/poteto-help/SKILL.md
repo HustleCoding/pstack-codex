@@ -32,10 +32,13 @@ Read [references/prompting.md](references/prompting.md) before helping word a ta
 | Goal | Skill |
 |---|---|
 | Run rigorous work with a matching playbook | poteto-mode |
+| Check the goal and problem before work starts | in-your-own-words |
+| Raise the task's ambition without prescribing implementation | sharpen |
 | Understand runtime flow or ownership | how |
 | Investigate design rationale or a threshold | why |
 | Explain a subsystem or change plainly | teach |
 | Rebuild recent scoped working context | recall |
+| Catch up on this chat since the last user message | ketchup |
 | Find what a diff could break elsewhere | blast-radius |
 | Design types and module boundaries | architect |
 | Compare complete candidates and graft the best parts | arena |
@@ -55,7 +58,18 @@ Read [references/prompting.md](references/prompting.md) before helping word a ta
 | Propose evidence-backed skill improvements | reflect |
 | Prevent repeated agent mistakes structurally | correct |
 
+If a neighboring skill is absent from the table, read its frontmatter and route by its description.
+
 Resolve these names through the installed skill catalog. Link a real local SKILL.md when available, or its public source under `https://github.com/HustleCoding/pstack-codex/blob/main/skills/`. Principles live in `principle-*` skills. Read the leaf before citing a principle.
+
+Close calls:
+
+- `how` explains runtime behavior. `why` investigates reasons. `teach` explains their results plainly.
+- `arena` compares the same brief across candidates and grafts the strongest parts. `swarm` covers slices or races and returns a report.
+- `architect` continues into implementation unless the caller asks for a checkpoint.
+- `interrogate` reviews the diff. `blast-radius` checks breakage elsewhere.
+- `recall` rebuilds context across chats. `ketchup` covers this chat since the user's last message. Session pickup resumes one specific chat or branch.
+- `figure-it-out` designs one run. Orchestrate coordinates a program across days and PRs. Autonomous run drives one task to its finish condition.
 
 ## Playbooks
 

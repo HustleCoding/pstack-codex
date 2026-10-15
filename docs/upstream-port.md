@@ -1,5 +1,47 @@
 # Upstream port record
 
+## October 15, 2026: upstream 0.15.25
+
+Reviewed all 29 pstack commits after `ccb5507cec1546dc88135c1139c811e6c59115ba` through [`e5136d82418d2db3165ea1050d17577cd618cc05`](https://github.com/cursor/plugins/commit/e5136d82418d2db3165ea1050d17577cd618cc05). This is a Codex-native port of the corresponding pstack 0.15.25 changes, not a package of the upstream runtime integrations.
+
+The catalog adds **ketchup**, **in-your-own-words**, and **sharpen**, for **53 skills** including 24 principles. Existing persisted model configuration is preserved. Per-task effort selection uses only supported Codex pairs and does not rewrite the user's budget or model routes.
+
+| Upstream commit | Disposition |
+|---|---|
+| [00b14f1](https://github.com/cursor/plugins/commit/00b14f1df36b32a8dd1529324a3a459f6563b127) | Port shorter skills, principle leaves, reviewer prompts, and source references while preserving Codex routes and authorization. |
+| [978ca6e](https://github.com/cursor/plugins/commit/978ca6e9c0e012047cd5058b8e829240336e704e) | Add ketchup as a read-only catch-up skill. Remove unsupported invocation frontmatter. |
+| [ea32d95](https://github.com/cursor/plugins/commit/ea32d9562a1c9f077d7cdd3be53d07383eb18866) | Port factual before/after visuals and unresolved user decisions in ketchup. |
+| [08bd59b](https://github.com/cursor/plugins/commit/08bd59b37834550f5e8fa0bb5e8852204a7534cf) | Port useful reductions. Retain Codex configuration, review, history, and scope rules. |
+| [de2dba6](https://github.com/cursor/plugins/commit/de2dba6ffa001bc3c97acf1f58bc7ab29d5fdc7a) | Exclude the Grok agent-id rename. Codex uses a normal collaboration reviewer and the existing Comment Sicko prompt. |
+| [87c8103](https://github.com/cursor/plugins/commit/87c810326a9a1dc727651b7d9bbfc5a116d68582) | Port matching CommonMark fence semantics and tests while preserving the stricter Codex unclosed-fence check and configurable lanes. |
+| [ff8f83d](https://github.com/cursor/plugins/commit/ff8f83da30af53de945acd0e1dc10a7b21a3187f) | Port review-thread pagination and owner-approval ACTION_REQUIRED classification with typed page fixtures and tests. Reject malformed or repeated continuation cursors. Reconcile gate-only aggregate failures against complete GraphQL contexts while retaining real failed checks, pending checks, and unexplained GitHub refusals. |
+| [bc697d0](https://github.com/cursor/plugins/commit/bc697d0a5a163cec979e362b601e36f5616083fd) | Port the narrower unslop description. Its use remains explicit in the pstack workflow. |
+| [cf9a111](https://github.com/cursor/plugins/commit/cf9a111eaf1eda5724abb607ef4c446ced843d65) | Adapt worktree audit to resolve the remote default branch or explicit base, fetch the exact remote ref, and preserve Codex task-use checks. |
+| [2bd5dd4](https://github.com/cursor/plugins/commit/2bd5dd4f22ef958435082c417c027079f8f4ddb7) | Port the receiving-chat runner rule. Ordinary Codex agents execute bounded steps rather than taking over the playbook. |
+| [e5a02f8](https://github.com/cursor/plugins/commit/e5a02f8fb0409c2db7eb06eae9078b235a2b5009) | Exclude the upstream Agent Plugins manifest. The Codex package uses its audited skill manifest and installer. |
+| [c49b37a](https://github.com/cursor/plugins/commit/c49b37a2c0e7bede60a71ad7322e3f12c337a3da) | Port usable readiness from empty data, migrations and seed data, failed journey preconditions, and stand-in environment limitations. |
+| [1b6d44f](https://github.com/cursor/plugins/commit/1b6d44ff26d4e242f4e8f68c391e6d2f7ca16def) | Record upstream version history only. No Cursor plugin metadata is packaged. |
+| [364a77e](https://github.com/cursor/plugins/commit/364a77eb358f16292410a7295fd8d103fb7dd40e) | Adapt bundled leaf discovery to the actual poteto-mode path supplied in child prompts. |
+| [997ffc7](https://github.com/cursor/plugins/commit/997ffc7fe26bdaa6478a14e7f5b8d5f9ed747102) | Record upstream version history only. No Cursor plugin metadata is packaged. |
+| [b93e811](https://github.com/cursor/plugins/commit/b93e8117880f695bc49ef7b1ef72c09bfcc7c1de) | Retain name/description-only frontmatter and Codex skill discovery. Adapt leaf paths and help; exclude Cursor slash-menu and agent-model metadata. |
+| [7d8d909](https://github.com/cursor/plugins/commit/7d8d9091e59a1fe9600bb317a1b7f69a31daa349) | Add in-your-own-words to restate the user goal and problem without introducing an approval gate. |
+| [d00ba6e](https://github.com/cursor/plugins/commit/d00ba6ee9b26ff3bb084b8a5051ff6436860cbdf) | Port short ketchup replies built on existing visual evidence, with explicit missing evidence. |
+| [36cecbf](https://github.com/cursor/plugins/commit/36cecbf2b5089b275254d59cb4612d6f96f00fbd) | Port the proposal for a cheap always-on diagnostic signal after a difficult diagnosis. This does not enable monitoring or authorize changes. |
+| [3177dab](https://github.com/cursor/plugins/commit/3177dab5d4057724e6a02a198596664707795444) | Record upstream version history only. No Cursor plugin metadata is packaged. |
+| [dbf4981](https://github.com/cursor/plugins/commit/dbf49813a39c1a5389c5e28cb8e4c1c2379e2454) | Port the goal-and-problem wording for in-your-own-words. |
+| [c86f349](https://github.com/cursor/plugins/commit/c86f349b102feb91f1966f8a6a60882a4e601b50) | Port ketchup plain speech and its under-150-word text target. |
+| [ce649c0](https://github.com/cursor/plugins/commit/ce649c03ac3b75b6ae80cbd15b7e2c536caedb5a) | Adapt per-task effort selection, fresh children, reduced full-swarm repeats, merge-result checks, gate countersigns, and single-writer stack rules. Retain Codex model families, configured budgets, heartbeat tools, bottom-only shipping, and bounded Orchestrate. Exclude speed suffixes, cloud assumptions, and the upstream orch CLI/store. |
+| [8043881](https://github.com/cursor/plugins/commit/8043881e5cbb962f8948d1a1f8f8e28089d67c9a) | Route changed autopilot audit ticks through ketchup. Preserve quiet unchanged ticks and requested Codex heartbeat scheduling. |
+| [79afd75](https://github.com/cursor/plugins/commit/79afd75d5bd51383fbb526b72f36db03180b8301) | Add sharpen for internal task framing followed by execution, preserving user choices and scope. |
+| [1e5c90a](https://github.com/cursor/plugins/commit/1e5c90a4b6f249917bd21fe361b3a2a7deb741b8) | Record upstream version history only. No Cursor plugin metadata is packaged. |
+| [afd51cf](https://github.com/cursor/plugins/commit/afd51cf66a3100a95f878d6c4b93a01f6508e3b0) | Port ketchup screenshots, videos, and small factual diagrams. Missing media does not authorize starting jobs or changing code. |
+| [6ce45c5](https://github.com/cursor/plugins/commit/6ce45c59b9301a638c1fe1a7b8dc2a82b650898f) | Record upstream 0.15.25. The Codex manifest now contains 53 skills, including 24 principles. |
+| [e5136d8](https://github.com/cursor/plugins/commit/e5136d82418d2db3165ea1050d17577cd618cc05) | Port reasoning-based tests, legitimate-state guards, explicit-premise testing, and retry convergence. Update correct and principle summaries together. |
+
+The Codex shipping protocol retains bottom-only preparation, current-head checks, stable patch IDs, forge-confirmed merge state, and squash-commit reachability. Stack owners do not mutate topology. Only the root rebases or retargets the chain, and the operator owns landing unless they explicitly grant it. Upstream reductions do not broaden publication, messaging, scheduling, cleanup, or production authority.
+
+Validation passed the 53-skill source and installed audits, 37 Python audit/installer/plan/worktree tests, 61 Bun PR watcher tests, strict typecheck, shell syntax, YAML frontmatter, Markdown links, and an installation content comparison. A read-only live GraphQL request also exercised the production review-thread reader against the previous update PR. Installation checks verify that persisted configuration and unrelated skills remain unchanged. These checks establish packaging and executable helper behavior; they do not evaluate every LLM workflow end to end.
+
 ## October 9, 2026: upstream 0.15.15
 
 Reviewed all five pstack commits from `4e5b1cf2ccb0ea3716f08c8ee0a5856b5ab93536` through [`ccb5507cec1546dc88135c1139c811e6c59115ba`](https://github.com/cursor/plugins/commit/ccb5507cec1546dc88135c1139c811e6c59115ba). The latter is the reviewed repository head; the latest pstack-specific commit is `df58112`.
@@ -72,4 +114,4 @@ Comment Sicko is supplied as a prompt for a normal Codex collaboration reviewer.
 
 Run `./scripts/audit.py` and `python3 -m unittest discover -s tests -v`. The tests check actual rejection of invalid routes and incomplete plans, then install and reinstall in isolated temporary Codex homes. They verify skill contents, backups, existing configuration, unrelated skills, cache exclusion, and a dry run with no writes.
 
-The bundled watcher retains its 38 tests and strict TypeScript check. GitHub Actions runs these checks on pull requests and pushes to main. Structural validation and these deterministic tests prove packaging and checker behavior. They do not prove every workflow's future LLM behavior or a production application's runtime.
+The bundled watcher has focused tests and a strict TypeScript check. GitHub Actions runs these checks on pull requests and pushes to main. Structural validation and these deterministic tests prove packaging and checker behavior. They do not prove every workflow's future LLM behavior or a production application's runtime.

@@ -1,8 +1,10 @@
 ### Worktree and simulator cleanup
 
+Choose each child's supported reasoning effort for its job, per the Subagents section.
+
 **Audit first. Delete only confirmed targets.** Use to reclaim disk from stale worktrees, simulators, and caches.
 
-1. Record `df -h /`. Run `scripts/worktree-audit.sh`. It discovers paths from `git worktree list` and reports size, age, merge state, dirty state, remote state, and PR state. It never deletes.
+1. Record `df -h /`. Run `scripts/worktree-audit.sh [-b <pr-base-ref>] [repo-path]`. Without `-b`, it resolves the remote default branch before main or master. Pass `-b origin/<branch>` when PRs target another branch. It discovers paths from `git worktree list` and reports size, age, merge state, dirty state, remote state, and PR state. It never deletes.
 2. Treat the suggested bucket as evidence, not permission. Check active Codex tasks or ask the user for the active set when task-history tools are unavailable.
 3. Inspect every uncertain worktree. A collaboration agent may inspect one bounded task or worktree read-only. An active task can own sibling arena or repro worktrees that do not appear in its title.
 4. Pause for tracked uncommitted work or an active task. Show the diff before any destructive decision. Name untracked files before treating them as disposable.

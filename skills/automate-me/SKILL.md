@@ -40,7 +40,7 @@ Cross-check across slices before elevating a signal. Patterns seen in 2+ slices 
 
 Mining misses intent that has not come up yet. Ask one or two short questions only where the answer materially changes the mode skill. Use structured input when the current Codex mode provides it; otherwise ask directly.
 
-Shape: one or two questions with 4-6 options each, `allow_multiple: true` for category questions. Start broad ("Which areas matter most?"), then follow up on selected areas with specific options. After the structured rounds, one free-form chat question catches anything the options missed.
+Start broad ("Which areas matter most?"), then follow up only where a selected area needs detail. Use the question count and option structure the active tool supports. Leave room for a free-form answer when the supported format allows it.
 
 Don't dump 20 questions.
 

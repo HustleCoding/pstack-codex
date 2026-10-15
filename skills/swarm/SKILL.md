@@ -23,12 +23,12 @@ Create a task plan with one entry per phase before launching anything.
 1. State the done predicate and the artifact or report the swarm must return.
 2. Choose the shape: partition into slices, race workers on identical briefs, or mix both. For a race or mixed shape, declare `first pass`, `rank all`, or `best-of` before spawning.
 3. Set the worker count from the user's request or derive it from the shape. The configured `maximum parallel children` in `~/.codex/pstack/config.md` and the live collaboration-slot limit cap simultaneous workers. Keep the fan-out no larger than the work warrants.
-4. When the collaboration tool exposes model and reasoning-effort selection, use model route `swarm workers`. For a difficult code slice, use model route `complex work`. Otherwise inherit the session runtime. Never invent a model slug or reasoning value.
+4. When the collaboration tool exposes model and reasoning-effort selection, use model route `swarm workers`. For a difficult code slice, use model route `complex work`. Otherwise inherit the session runtime. For a model race, name each arm's model up front. Never invent a model slug or reasoning value.
 5. Give each writer its own worktree or output path. Verification briefs name exact commit SHAs. Measurement briefs also name the method, sample count, what one sample is, and order. Workers record those in their results.
 
 ## Phase B: Fan out
 
-Spawn all independent workers before waiting. Each brief must stand alone and include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence. A worker that proves defects reports `ISSUES` with every proven issue.
+Spawn independent workers before waiting, in bounded waves when the worker count exceeds the available slots. Each brief must stand alone and include the goal, scope, exact slice or race arm, how to verify, and what to report. Reports use `PASS`, `ISSUES`, or `BLOCKED` with evidence. A worker that proves defects reports `ISSUES` with every proven issue.
 
 If a worker drops out, proceed with the completed set and name the gap. Do not quietly substitute a different scope.
 

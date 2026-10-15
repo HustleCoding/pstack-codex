@@ -1,5 +1,7 @@
 ### Perf issue
 
+Choose each child's supported reasoning effort for its job, per the Subagents section.
+
 **You own the measurement story. Plan, review, verify the numbers.** Tie every fix to a measurement, don't read source instead of measuring.
 
 1. Capture a baseline trace via an installed browser, computer-use, or verification skill. Vet the baseline, and each later number, with the **benchmark-checklist** skill.

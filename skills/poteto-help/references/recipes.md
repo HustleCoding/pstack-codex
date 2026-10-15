@@ -7,6 +7,8 @@ A prompt grants only its stated scope. Publishing, merging, and scheduled follow
 ## Understand
 
 - `/poteto-mode read <thread>. restate the underlying issue in your own words, in plain english.`
+- `/in-your-own-words <long or messy ask>`
+- `/sharpen <your task>`
 - `/poteto-mode investigate why <symptom>. give me what we know, what data you used, and your best hypotheses. don't change any code yet.`
 - `use /how to understand <subsystem>. then use /why to find out why it broke recently.`
 - `/recall my work on <topic> from last week, then read <issue>.`
