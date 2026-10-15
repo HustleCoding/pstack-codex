@@ -1,5 +1,7 @@
 ### Orchestrate
 
+Choose each child's supported reasoning effort for its job, per the Subagents section.
+
 **Own the program, not the code.** Use for a multi-day project with many independently verifiable units. Use Autonomous run when one agent can finish within the current task budget.
 
 ## Durable state

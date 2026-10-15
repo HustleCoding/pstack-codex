@@ -10,7 +10,7 @@ The engineering principles and playbooks remain pstack's. The runtime integratio
 - Codex browser, computer-use, GitHub, and automation tools
 - `.codex/skills` for global and project-local skills
 
-The port tracks upstream **0.15.15** at [`ccb5507`](https://github.com/cursor/plugins/commit/ccb5507cec1546dc88135c1139c811e6c59115ba), reviewed on October 9, 2026. It contains **50 skills**, including 24 engineering principles. This update adds prompting references, copyable recipes, missing-configuration guidance, and explicit reasoning-budget targets. The Codex-only Sol, Luna, and Astra routes remain the balanced defaults. See [the port record](docs/upstream-port.md) for adaptations and exclusions.
+The port tracks upstream **0.15.25** at [`e5136d8`](https://github.com/cursor/plugins/commit/e5136d82418d2db3165ea1050d17577cd618cc05), reviewed on October 15, 2026. It contains **53 skills**, including 24 engineering principles. This update adds **ketchup**, **in-your-own-words**, and **sharpen**, improves the PR watcher and plan/worktree checks, and simplifies guidance while preserving Codex runtime and authorization rules. See [the port record](docs/upstream-port.md) for adaptations and exclusions.
 
 ## Install
 
@@ -58,7 +58,7 @@ Start rigorous work with:
 Use poteto-mode. Diagnose this bug, prove the root cause, fix it, and verify on the real surface.
 ```
 
-You can also invoke focused skills such as `how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `blast-radius`, `tdd`, and `teach`.
+You can also invoke focused skills such as `how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `blast-radius`, `tdd`, and `teach`. Use `ketchup` to catch up on a long chat, `in-your-own-words` to check the agent understands the goal, and `sharpen` to improve the approach before it starts.
 
 PR monitoring uses the bundled `poteto-mode` watcher. It requires Bun and an authenticated GitHub CLI:
 

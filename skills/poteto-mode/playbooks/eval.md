@@ -1,5 +1,7 @@
 ### Eval
 
+Choose each child's supported reasoning effort for its job, per the Subagents section.
+
 **You own the experiment design. Plan, blind, run, synthesize.**
 
 **Non-negotiables for blinding:**

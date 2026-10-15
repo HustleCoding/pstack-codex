@@ -138,6 +138,30 @@ class PlanTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("unclosed code fence", result.stderr)
 
+    def test_commonmark_fence_indents_and_closers(self):
+        for indent in ["", " ", "  ", "   "]:
+            for opener, closer in [("```markdown", "````"), ("~~~markdown `info`", "~~~~")]:
+                with self.subTest(indent=indent, opener=opener):
+                    text = f"{indent}{opener}\n## Example only\n{indent}{closer} \t\n"
+                    result = self.check(plan() + text)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_mismatched_short_and_suffixed_fences_stay_inside_code(self):
+        for closer in ["~~~", "```", "```` info", "````\u00a0"]:
+            with self.subTest(closer=closer):
+                result = self.check(plan() + f"````markdown\n{closer}\n## Example only\n````\n")
+                self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_prose_after_closed_fence_is_checked(self):
+        result = self.check(plan() + "```markdown\nIgnored colon: here.\n``` \t\nBad colon: here.\n")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("mid-sentence colon", result.stderr)
+
+    def test_backticks_in_info_string_do_not_open_fence(self):
+        result = self.check(plan() + "```markdown `invalid`\n## Example only\n```\n")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('"## Example only" after Close the program', result.stderr)
+
     def test_missing_receipt_fails(self):
         result = self.check(plan().replace("Save `lane-1.txt`.", ""))
         self.assertNotEqual(result.returncode, 0)

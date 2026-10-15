@@ -8,7 +8,9 @@ correct
 create-verification-skill
 figure-it-out
 how
+in-your-own-words
 interrogate
+ketchup
 maintain-verification-skill
 no-comments
 poteto-help
@@ -40,6 +42,7 @@ principle-type-system-discipline
 recall
 reflect
 setup-pstack
+sharpen
 show-me-your-work
 swarm
 tdd

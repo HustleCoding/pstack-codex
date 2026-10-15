@@ -51,7 +51,7 @@ for (let i = start; i < raw.length; i++) {
 	const marker = text.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
 	if (fence) {
 		lines.push({ n, text, code: true });
-		if (marker && marker[1][0] === fence.char && marker[1].length >= fence.length && marker[2].trim() === "") fence = null;
+		if (marker && marker[1][0] === fence.char && marker[1].length >= fence.length && /^[ \t]*$/.test(marker[2])) fence = null;
 		continue;
 	}
 	if (marker && (marker[1][0] !== "`" || !marker[2].includes("`"))) {

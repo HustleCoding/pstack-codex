@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { WatcherQueryError } from "./github.ts";
+import { WatcherQueryError, parseFastCheck } from "./github.ts";
 import {
   applyQueueSnapshot,
   assessGitHubMerge,
@@ -68,6 +68,32 @@ describe("readiness truth table", () => {
     }
   });
 
+  it("does not wait on an owner-approval ACTION_REQUIRED gate", async () => {
+    const reader = fakeReader({
+      fastPath: {
+        kind: "checks",
+        checks: [
+          passingCheck(),
+          parseFastCheck({
+            name: "Code Review Gate",
+            state: "ACTION_REQUIRED",
+            bucket: "fail",
+          }),
+        ],
+      },
+    });
+    const snapshot = await readSnapshot({
+      reader,
+      context: context(1),
+      pendingHistory: "include",
+      allowDraft: false,
+    });
+    expect(snapshot.kind).toBe("open");
+    if (snapshot.kind !== "open") throw new Error("expected open snapshot");
+    expect(snapshot.ci.kind).toBe("ci-clean");
+    expect(classifyPr(snapshot)).toMatchObject({ kind: "ready" });
+  });
+
   it("turns a clean visible list plus GitHub refusal into an explicit CI blocker", async () => {
     const reader = fakeReader({
       facts: { mergeStateStatus: "BLOCKED" },
@@ -106,7 +132,7 @@ describe("snapshot query planning", () => {
     expect(snapshot.ci.kind).toBe("ci-pending");
     expect(reader.calls).toEqual([
       "pullRequest",
-      "reviewThreads",
+      "reviewThreadPage:null",
       "checksFastPath",
     ]);
   });

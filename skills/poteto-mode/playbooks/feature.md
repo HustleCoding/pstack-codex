@@ -1,5 +1,7 @@
 ### Feature
 
+Choose each child's supported reasoning effort for its job, per the Subagents section.
+
 **You own the design. Plan, review, verify.** Delegate implementation. Stay in the lead.
 
 1. `how` over the affected subsystem.

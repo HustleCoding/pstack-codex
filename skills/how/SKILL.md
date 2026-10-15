@@ -11,43 +11,27 @@ Read `~/.codex/pstack/config.md` when it exists. Pass a route's verified model a
 
 For a model override, spawn a fresh child with minimal task-local context (`fork_turns: "none"` where supported). Full-history forks inherit model and effort.
 
-## Step 1. Assess Complexity
+## 1. Assess complexity
 
 If the scope is ambiguous, state your interpretation and explore. The user can redirect.
 
-- **Simple** (a single module, a small utility, a narrow question such as "how does function X work"): no explorers. One explainer explores and explains in a single pass. Go to Step 2b.
-- **Complex** (a subsystem spanning multiple files or services, a cross-cutting feature, a full architectural overview): spawn parallel explorers first, then hand off to the explainer. Go to Step 2a.
+- **Simple** (a single module, a small utility, a narrow question such as "how does function X work"): no explorers. Spawn one explainer with model route `how explainer` that explores and explains in one pass, built from `references/explainer-prompt.md` without the explorer-findings section. Go to step 4.
+- **Complex** (a subsystem spanning multiple files or services, a cross-cutting feature, a full architectural overview): go to step 2.
 
 When in doubt, take the simple path.
 
-## Step 2a. Explore (complex questions only)
+## 2. Explore (complex only)
 
-Decompose the question into 2 to 4 exploration angles, each a distinct slice of the subsystem. Spawn the explorers before waiting, bounded by the available slots.
+Decompose the question into 2 to 4 angles, each a distinct slice of the subsystem. Spawn Codex collaboration explorers with model route `how explorers`, bounded by available slots. Each gets `references/explorer-prompt.md` with its angle filled in.
 
-Use Codex collaboration agents with model route `how explorers`, bounded by available slots.
+## 3. Synthesize (complex only)
 
-Each explorer gets the prompt in `references/explorer-prompt.md` with its angle filled in. Then go to Step 3.
+Once all explorers have returned, spawn one explainer with model route `how explainer`, `references/explainer-prompt.md`, and every explorer's findings filled in.
 
-## Step 2b. Direct Explain (simple questions)
-
-Spawn one Codex collaboration agent that explores and explains in one pass:
-
-Use a Codex collaboration agent with model route `how explainer`.
-
-Build its prompt from `references/explainer-prompt.md` without the explorer-findings section. Go to Step 4.
-
-## Step 3. Synthesize (complex questions only)
-
-Once all explorers have returned, spawn one Codex collaboration agent to synthesize their findings into one explanation:
-
-Use a Codex collaboration agent with model route `how explainer`.
-
-Build its prompt from `references/explainer-prompt.md` with every explorer's findings filled in.
-
-## Step 4. Present
+## 4. Present
 
 Review the explanation against the source and own the final synthesis. Preserve the explainer's evidence and uncertainty. For critique requests, route the completed explanation to `interrogate` instead of reviving the retired How critic panel.
 
-## Output Format
+## Output format
 
 The explanation uses the sections defined in `references/explainer-prompt.md`, dropping any that do not apply: Overview, Key Concepts, How It Works, Where Things Live, Gotchas.

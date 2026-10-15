@@ -1,5 +1,7 @@
 ### Session pickup
 
+Choose each child's supported reasoning effort for its job, per the Subagents section.
+
 **You own the resume point. Read the prior trail, don't redo it.**
 
 1. Locate the prior trail through scoped Codex task history, the supplied chat, a decision trail, or a pushed branch. Read recent status and metadata first, then trace the decisions. Parse large supplied history in a bounded child and keep only its timeline in the parent. Never scan unrelated projects.
