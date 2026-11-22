@@ -1,5 +1,14 @@
 # Upstream port record
 
+## November 22, 2026: upstream 0.15.46
+
+Updated the Codex port from 0.15.25 to the [0.15.46 snapshot](https://github.com/cursor/plugins/commit/0b46ec399d55f2829e88822998f53b84944837d3).
+
+- Added `statechart`, `create-formal-verification-skill`, `maintain-formal-verification-skill`, and `ketchup-video`. Statechart accepts an existing TLC installation or can set one up with mise. Its macOS symlink test resolves the temporary folder before constructing a relative link.
+- Updated Sharpen to return a rewritten prompt. Updated Technical Writing, Unslop, and applicable principles. Ketchup now lists all pending user decisions regardless of summary length.
+- Ported the PR watcher fixes for same-named fork branches and deadline-aware polling. Kept the existing Codex plan checker, worktree audit, collaboration prompts, and explicit write authority. Cursor plugin metadata, provider routing, Cursor transcript scanning, and Benny automation stay upstream.
+- GPT-6.2 Sol takes routine and complex work, GPT-6.2 Astra takes the hardest work, and GPT-6 Luna stays the lighter exploration option. Existing user model overrides are preserved on installation. The active Codex collaboration schema is the source for supported model and effort combinations.
+
 ## October 15, 2026: upstream 0.15.25
 
 Reviewed all 29 pstack commits after `ccb5507cec1546dc88135c1139c811e6c59115ba` through [`e5136d82418d2db3165ea1050d17577cd618cc05`](https://github.com/cursor/plugins/commit/e5136d82418d2db3165ea1050d17577cd618cc05). This is a Codex-native port of the corresponding pstack 0.15.25 changes, not a package of the upstream runtime integrations.

@@ -42,36 +42,36 @@ Use this shape, adjusted to the capabilities you verified:
 ## Parent task
 
 - runtime: Codex
-- recommendation: gpt-6.1-sol@high for daily coding and final synthesis
+- recommendation: gpt-6.2-sol@high for daily coding and final synthesis
 - boundary: pstack cannot change the active task model or reasoning effort; select them when starting the task
 
 ## Budget
 
 - profile: balanced
 - policy: balanced preserves the per-role efforts below; unlimited, large, medium, and small target max, xhigh, high, and medium respectively, using a supported effort at or below the target
-- verified: 2026-10-09 from the active Codex collaboration schema
+- verified: 2026-11-22 from the active Codex collaboration schema
 
 ## Model routes
 
 - default child: gpt-6-luna@medium
-- routine work: gpt-6.1-sol@medium
-- complex work: gpt-6.1-sol@high
-- bug-fix: gpt-6.1-sol@high
-- perf-issue: gpt-6.1-sol@high
-- hillclimb: gpt-6.1-sol@high
-- hardest tasks: gpt-6-astra@high
+- routine work: gpt-6.2-sol@medium
+- complex work: gpt-6.2-sol@high
+- bug-fix: gpt-6.2-sol@high
+- perf-issue: gpt-6.2-sol@high
+- hillclimb: gpt-6.2-sol@high
+- hardest tasks: gpt-6.2-astra@high
 - how explorers: gpt-6-luna@high
-- how explainer: gpt-6.1-sol@high
+- how explainer: gpt-6.2-sol@high
 - why investigators: gpt-6-luna@high
-- why synthesizer: gpt-6.1-sol@high
-- arena runners: gpt-6-luna@high, gpt-6.1-sol@high, gpt-6-astra@high
-- architect runners: gpt-6-luna@high, gpt-6.1-sol@high, gpt-6-astra@high
-- interrogate reviewers: gpt-6-luna@high, gpt-6.1-sol@high, gpt-6-astra@high
-- arena cross-judge pool: gpt-6-astra@high, gpt-6.1-sol@high, gpt-6-luna@high
+- why synthesizer: gpt-6.2-sol@high
+- arena runners: gpt-6-luna@high, gpt-6.2-sol@high, gpt-6.2-astra@high
+- architect runners: gpt-6-luna@high, gpt-6.2-sol@high, gpt-6.2-astra@high
+- interrogate reviewers: gpt-6-luna@high, gpt-6.2-sol@high, gpt-6.2-astra@high
+- arena cross-judge pool: gpt-6.2-astra@high, gpt-6.2-sol@high, gpt-6-luna@high
 - reflect tooling: gpt-6-luna@medium
-- reflect judgment: gpt-6.1-sol@high
-- reflect divergent: gpt-6-astra@high
-- reflect synthesizer: gpt-6.1-sol@high
+- reflect judgment: gpt-6.2-sol@high
+- reflect divergent: gpt-6.2-astra@high
+- reflect synthesizer: gpt-6.2-sol@high
 - swarm workers: gpt-6-luna@high
 
 ## Runtime policy
@@ -97,10 +97,10 @@ Use this shape, adjusted to the capabilities you verified:
 
 Keep the file factual. Omit unavailable integrations instead of leaving aspirational settings.
 
-The example models were verified on 2026-10-09. Re-check the actual session before writing them. If a model is unavailable, choose a verified Codex model for that role or inherit, and disclose the change. Never route to another provider. Luna supports up to max, not ultra.
+The example models were verified on 2026-11-22. Re-check the actual session before writing them. If a model is unavailable, choose a verified Codex model for that role or inherit, and disclose the change. Never route to another provider. Luna supports up to max, not ultra.
 
 The model-route labels are stable identifiers used by pstack workflow skills. Every route entry uses `model@reasoning_effort`, or `inherit-parent` to omit both fields. `auto` is an alias for inheritance, not permission to choose another provider; panel entries are comma-separated and launch one child per entry in order. The `Parent task` recommendation is advisory because a child-spawn setting cannot change the active task. For an override, use a fresh child with minimal task-local context. Full-history forks inherit model and effort. When the active collaboration tool cannot select a model or effort, omit both fields and inherit the session runtime.
 
 ## 5. Confirm and offer verification
 
-Report the path written and the effective settings. Check whether the active project already has `.codex/skills/verify-*` or another real-user verification harness. If none exists, mention `create-verification-skill` once. Do not create it unless the user asks.
+Report the path written and the effective settings. Check whether the active project already has `.codex/skills/verify-*` or another real-user verification harness. If none exists, mention `create-verification-skill` once. If the work involves a race, a state machine, or a property tests rarely reach, mention `create-formal-verification-skill`. Create a project verification skill when the user asks.

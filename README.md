@@ -10,7 +10,7 @@ The engineering principles and playbooks remain pstack's. The runtime integratio
 - Codex browser, computer-use, GitHub, and automation tools
 - `.codex/skills` for global and project-local skills
 
-The port tracks upstream **0.15.25** at [`e5136d8`](https://github.com/cursor/plugins/commit/e5136d82418d2db3165ea1050d17577cd618cc05), reviewed on October 15, 2026. It contains **53 skills**, including 24 engineering principles. This update adds **ketchup**, **in-your-own-words**, and **sharpen**, improves the PR watcher and plan/worktree checks, and simplifies guidance while preserving Codex runtime and authorization rules. See [the port record](docs/upstream-port.md) for adaptations and exclusions.
+The port tracks upstream **0.15.46** at [`0b46ec3`](https://github.com/cursor/plugins/commit/0b46ec399d55f2829e88822998f53b84944837d3) and includes **57 skills**. This update adds formal verification, Statechart, and Ketchup video, and fixes PR stack discovery for forks. See [the port record](docs/upstream-port.md) for Codex adaptations.
 
 ## Install
 
@@ -38,13 +38,13 @@ The recommended balanced setup uses only models available in Codex:
 
 | Role | Model and reasoning |
 |---|---|
-| Parent, complex implementation, and synthesis | `gpt-6.1-sol@high` |
-| Routine implementation | `gpt-6.1-sol@medium` |
+| Parent, complex implementation, and synthesis | `gpt-6.2-sol@high` |
+| Routine implementation | `gpt-6.2-sol@medium` |
 | Focused exploration and swarm workers | `gpt-6-luna@high` |
-| Hardest design work and demanding review | `gpt-6-astra@high` |
+| Hardest design work and demanding review | `gpt-6.2-astra@high` |
 | Review panels | Luna High, Sol High, Astra High |
 
-These choices balance the efficient Luna with Sol for sustained work and Astra for the hardest judgment. They follow [official Codex model guidance](https://learn.chatgpt.com/docs/models) and were verified against this session's model schema on October 5, 2026. Re-check availability when configuring another account or client. Luna supports up to Max, not Ultra. See [config.example.md](config.example.md) for all routes.
+These choices balance the efficient Luna with Sol for sustained work and Astra for the hardest judgment. They follow [official Codex model guidance](https://learn.chatgpt.com/docs/models) and were verified against this session's model schema on November 22, 2026. Re-check availability when configuring another account or client. Luna supports up to Max, not Ultra. See [config.example.md](config.example.md) for all routes.
 
 Choose the parent in Codex's model picker. Routes control compatible child spawns and cannot change the active parent. A model override uses a fresh child with task-local context; full-history forks inherit. With no compatible override, children inherit the session runtime. Fan-out is capped by the live slot limit and configured maximum, with three children as the example cap.
 
@@ -58,7 +58,7 @@ Start rigorous work with:
 Use poteto-mode. Diagnose this bug, prove the root cause, fix it, and verify on the real surface.
 ```
 
-You can also invoke focused skills such as `how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `blast-radius`, `tdd`, and `teach`. Use `ketchup` to catch up on a long chat, `in-your-own-words` to check the agent understands the goal, and `sharpen` to improve the approach before it starts.
+You can also invoke focused skills such as `how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `blast-radius`, `tdd`, and `teach`. Use `ketchup` to catch up on a long chat, `in-your-own-words` to check the agent understands the goal, and `sharpen` to rewrite a prompt before sending it.
 
 PR monitoring uses the bundled `poteto-mode` watcher. It requires Bun and an authenticated GitHub CLI:
 

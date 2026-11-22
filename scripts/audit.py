@@ -27,6 +27,9 @@ FORBIDDEN = {
 }
 AUDITED_SUFFIXES = {".md", ".ts", ".js", ".mjs", ".json", ".sh"}
 MODEL_EFFORTS = {
+    "gpt-6.2-sol": {"low", "medium", "high", "xhigh", "max", "ultra"},
+    "gpt-6.2-astra": {"low", "medium", "high", "xhigh", "max", "ultra"},
+    "gpt-6.2-terra": {"low", "medium", "high", "xhigh", "max", "ultra"},
     "gpt-6.1-sol": {"low", "medium", "high", "xhigh", "max", "ultra"},
     "gpt-6-astra": {"low", "medium", "high", "xhigh", "max", "ultra"},
     "gpt-6-sol": {"low", "medium", "high", "xhigh", "max", "ultra"},
@@ -35,7 +38,7 @@ MODEL_EFFORTS = {
     "gpt-5.6-luna": {"low", "medium", "high", "xhigh", "max"},
     "gpt-5.5": {"low", "medium", "high", "xhigh"},
 }
-DEFAULT_MODEL_SLUGS = {"gpt-6.1-sol", "gpt-6-astra", "gpt-6-luna"}
+DEFAULT_MODEL_SLUGS = {"gpt-6.2-sol", "gpt-6.2-astra", "gpt-6-luna"}
 INHERITED_ROUTES = {"inherit-parent", "auto"}
 FOREIGN_MODELS = re.compile(r"\b(?:claude-[a-z0-9.-]+|grok-[a-z0-9.-]+|fable-[a-z0-9.-]+)\b", re.I)
 MODEL_ROUTE_REFERENCE = re.compile(r"model route `([^`]+)`")
