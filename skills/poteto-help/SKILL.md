@@ -33,12 +33,12 @@ Read [references/prompting.md](references/prompting.md) before helping word a ta
 |---|---|
 | Run rigorous work with a matching playbook | poteto-mode |
 | Check the goal and problem before work starts | in-your-own-words |
-| Raise the task's ambition without prescribing implementation | sharpen |
+| Rewrite a prompt around expert methods and an independent check | sharpen |
 | Understand runtime flow or ownership | how |
 | Investigate design rationale or a threshold | why |
 | Explain a subsystem or change plainly | teach |
 | Rebuild recent scoped working context | recall |
-| Catch up on this chat since the last user message | ketchup |
+| Catch up on this chat since the last user message | ketchup, ketchup-video |
 | Find what a diff could break elsewhere | blast-radius |
 | Design types and module boundaries | architect |
 | Compare complete candidates and graft the best parts | arena |
@@ -50,6 +50,8 @@ Read [references/prompting.md](references/prompting.md) before helping word a ta
 | Clean prose or write technical documents | unslop, technical-writing |
 | Restate the last message plainly | bro |
 | Create or maintain real-user verification | create-verification-skill, maintain-verification-skill |
+| Create or update a formal check for a race or invariant | create-formal-verification-skill, maintain-formal-verification-skill |
+| Check a TLA+ model and draw its behavior | statechart |
 | Vet benchmark claims | benchmark-checklist |
 | Design a playbook for a large migration | figure-it-out |
 | Keep a reviewable decision trail | show-me-your-work |

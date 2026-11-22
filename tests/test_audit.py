@@ -27,15 +27,15 @@ class AuditTests(unittest.TestCase):
         self.assertTrue(any("unsupported reasoning effort" in error for error in errors))
 
     def test_unavailable_provider_is_rejected(self):
-        _, errors = self.routes(lambda text: text.replace("gpt-6.1-sol@medium", "claude-opus-5-5@high"))
+        _, errors = self.routes(lambda text: text.replace("gpt-6.2-sol@medium", "claude-opus-5-5@high"))
         self.assertTrue(any("unavailable model" in error for error in errors))
 
     def test_inherited_panel_seats_keep_the_count(self):
-        _, errors = self.routes(lambda text: text.replace("gpt-6-luna@high, gpt-6.1-sol@high, gpt-6-astra@high", "inherit-parent, auto, inherit-parent"))
+        _, errors = self.routes(lambda text: text.replace("gpt-6-luna@high, gpt-6.2-sol@high, gpt-6.2-astra@high", "inherit-parent, auto, inherit-parent"))
         self.assertEqual(errors, [])
 
     def test_parent_model_effort_is_checked(self):
-        _, errors = self.routes(lambda text: text.replace("gpt-6.1-sol@high for", "gpt-6-luna@ultra for"))
+        _, errors = self.routes(lambda text: text.replace("gpt-6.2-sol@high for", "gpt-6-luna@ultra for"))
         self.assertTrue(any("unsupported parent-task effort" in error for error in errors))
 
     def test_panel_count_mismatch_is_rejected(self):

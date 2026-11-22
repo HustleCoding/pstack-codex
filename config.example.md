@@ -3,36 +3,36 @@
 ## Parent task
 
 - runtime: Codex
-- recommendation: gpt-6.1-sol@high for daily coding and final synthesis
+- recommendation: gpt-6.2-sol@high for daily coding and final synthesis
 - boundary: pstack cannot change the active task model or reasoning effort; select them when starting the task
 
 ## Budget
 
 - profile: balanced
 - policy: balanced preserves the per-role efforts below; unlimited, large, medium, and small target max, xhigh, high, and medium respectively, using a supported effort at or below the target
-- verified: 2026-10-09 from the active Codex collaboration schema
+- verified: 2026-11-22 from the active Codex collaboration schema
 
 ## Model routes
 
 - default child: gpt-6-luna@medium
-- routine work: gpt-6.1-sol@medium
-- complex work: gpt-6.1-sol@high
-- bug-fix: gpt-6.1-sol@high
-- perf-issue: gpt-6.1-sol@high
-- hillclimb: gpt-6.1-sol@high
-- hardest tasks: gpt-6-astra@high
+- routine work: gpt-6.2-sol@medium
+- complex work: gpt-6.2-sol@high
+- bug-fix: gpt-6.2-sol@high
+- perf-issue: gpt-6.2-sol@high
+- hillclimb: gpt-6.2-sol@high
+- hardest tasks: gpt-6.2-astra@high
 - how explorers: gpt-6-luna@high
-- how explainer: gpt-6.1-sol@high
+- how explainer: gpt-6.2-sol@high
 - why investigators: gpt-6-luna@high
-- why synthesizer: gpt-6.1-sol@high
-- arena runners: gpt-6-luna@high, gpt-6.1-sol@high, gpt-6-astra@high
-- architect runners: gpt-6-luna@high, gpt-6.1-sol@high, gpt-6-astra@high
-- interrogate reviewers: gpt-6-luna@high, gpt-6.1-sol@high, gpt-6-astra@high
-- arena cross-judge pool: gpt-6-astra@high, gpt-6.1-sol@high, gpt-6-luna@high
+- why synthesizer: gpt-6.2-sol@high
+- arena runners: gpt-6-luna@high, gpt-6.2-sol@high, gpt-6.2-astra@high
+- architect runners: gpt-6-luna@high, gpt-6.2-sol@high, gpt-6.2-astra@high
+- interrogate reviewers: gpt-6-luna@high, gpt-6.2-sol@high, gpt-6.2-astra@high
+- arena cross-judge pool: gpt-6.2-astra@high, gpt-6.2-sol@high, gpt-6-luna@high
 - reflect tooling: gpt-6-luna@medium
-- reflect judgment: gpt-6.1-sol@high
-- reflect divergent: gpt-6-astra@high
-- reflect synthesizer: gpt-6.1-sol@high
+- reflect judgment: gpt-6.2-sol@high
+- reflect divergent: gpt-6.2-astra@high
+- reflect synthesizer: gpt-6.2-sol@high
 - swarm workers: gpt-6-luna@high
 
 ## Runtime policy
